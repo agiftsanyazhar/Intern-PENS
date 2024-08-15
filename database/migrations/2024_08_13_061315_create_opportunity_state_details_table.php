@@ -13,13 +13,24 @@ return new class extends Migration
     {
         Schema::create('opportunity_state_details', function (Blueprint $table) {
             $table->id();
-            $table->string('opportunity_name');
             $table->foreignId('opportunity_state_id')
                 ->constrained('opportunity_states')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->longText('description')->nullable();
-            $table->integer('created_by')->nullable();
+            $table->integer('opportunity_status_id')
+                ->default(1)
+                ->comment('
+                1: Inquiry (Customer/sales just found the opportunity)
+                2: Follow Up (Sales in progress acquiring detail)
+                3: Stale (Customer/sales haven\'t give response for more than 5 working days)
+                4: Completed (PO issued by customer)
+                5: Failed (Customer cancel the opportunity/no reponse for more than 15 working days)
+            ');
+            $table->longText('description');
+            $table->foreignId('created_by')
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');;
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
             $table->timestamps();

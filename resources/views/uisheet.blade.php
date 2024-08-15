@@ -15,7 +15,7 @@
                         transform="rotate(45 19.7783 -0.779297)" fill="white" />
                 </svg>
                 <h1 class="my-4">
-                    <span>{{ env('APP_NAME') }} - Design System</span>
+                    <span>PT Mitral</span>
                 </h1>
                 <h4 class="text-white mb-5">Production ready FREE Open Source <b>Dashboard UI Kit</b> and <b>Design
                         System</b>.</h4>
@@ -55,7 +55,7 @@
                             <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2"
                                 transform="rotate(45 10.5562 -0.556152)" fill="currentColor"></rect>
                         </svg>
-                        <h5 class="logo-title">{{ env('APP_NAME') }}</h5>
+                        <h5 class="logo-title">PT Mitral</h5>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbar-2" aria-controls="navbar-2" aria-expanded="false"

@@ -14,7 +14,7 @@
                         <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2"
                             transform="rotate(45 10.5562 -0.556152)" fill="currentColor" />
                     </svg>
-                    <h4 class="logo-title ms-3 text-white">{{env('APP_NAME')}}</h4>
+                    <h4 class="logo-title ms-3 text-white">PT Mitral</h4>
                 </a>
 
                 <div class="d-flex align-items-center pt-5">

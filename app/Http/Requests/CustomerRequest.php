@@ -35,12 +35,12 @@ class CustomerRequest extends FormRequest
                     'customer_name' => 'required|string|max:255',
                     'company_name' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
-                    'company_email' => 'required|string|email|max:255|unique:customers,company_email',
-                    'company_phone' => 'required|string|max:255|unique:customers,company_phone',
+                    'company_email' => 'required|string|email|max:255|unique:customers,company_email|unique:users,email',
+                    'company_phone' => 'required|string|max:255|unique:customers,company_phone|unique:users,phone',
                     'company_pic_name' => 'required|string|max:255',
                     'company_pic_address' => 'required|string|max:255',
-                    'company_pic_email' => 'required|string|email|max:255|unique:customers,company_pic_email',
-                    'company_pic_phone' => 'required|string|max:255|unique:customers,company_pic_phone',
+                    'company_pic_email' => 'required|string|email|max:255|unique:customers,company_pic_email|unique:users,email',
+                    'company_pic_phone' => 'required|string|max:255|unique:customers,company_pic_phone|unique:users,phone',
                     'description' => 'nullable|string',
                 ];
                 break;
@@ -51,12 +51,12 @@ class CustomerRequest extends FormRequest
                     'customer_name' => 'required|string|max:255',
                     'company_name' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
-                    'company_email' => 'required|string|email|max:255|unique:customers,company_email,' . $customerId,
-                    'company_phone' => 'required|string|max:255|unique:customers,company_phone,' . $customerId,
+                    'company_email' => 'required|string|email|max:255|unique:users,email|unique:customers,company_email,' . $customerId,
+                    'company_phone' => 'required|string|max:255|unique:users,phone|unique:customers,company_phone,' . $customerId,
                     'company_pic_name' => 'required|string|max:255',
                     'company_pic_address' => 'required|string|max:255',
-                    'company_pic_email' => 'required|string|email|max:255|unique:customers,company_pic_email,' . $customerId,
-                    'company_pic_phone' => 'required|string|max:255|unique:customers,company_pic_phone,' . $customerId,
+                    'company_pic_email' => 'required|string|email|max:255|unique:users,email|unique:customers,company_pic_email,' . $customerId,
+                    'company_pic_phone' => 'required|string|max:255|unique:users,phone|unique:customers,company_pic_phone,' . $customerId,
                     'description' => 'nullable|string',
                 ];
                 break;

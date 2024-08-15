@@ -15,24 +15,28 @@ class OpportunityStateSeeder extends Seeder
     {
         $opportunityStates = [
             [
-                'opportunity_status' => 'Inquiry',
-                'note' => 'Customer/sales just found the opportunity',
+                'customer_id' => 1,
+                'opportunity_status_id' => 1,
+                'opportunity_value' => 1000000,
+                'title' => 'Judul 1',
+                'description' => 'Deskripsi 1',
+                'created_by' => 2,
             ],
             [
-                'opportunity_status' => 'Follow Up',
-                'note' => 'Sales in progress acquiring detail',
+                'customer_id' => 2,
+                'opportunity_status_id' => 2,
+                'opportunity_value' => 2000000,
+                'title' => 'Judul 2',
+                'description' => 'Deskripsi 2',
+                'created_by' => 3,
             ],
             [
-                'opportunity_status' => 'Stale',
-                'note' => 'Customer/sales haven\'t give response for more than 5 working days',
-            ],
-            [
-                'opportunity_status' => 'Completed',
-                'note' => 'PO issued by customer',
-            ],
-            [
-                'opportunity_status' => 'Failed',
-                'note' => 'Customer cancel the opportunity / no reponse for more than 15 working days',
+                'customer_id' => 3,
+                'opportunity_status_id' => 3,
+                'opportunity_value' => 3000000,
+                'title' => 'Judul 3',
+                'description' => 'Deskripsi 3',
+                'created_by' => 2,
             ],
         ];
 

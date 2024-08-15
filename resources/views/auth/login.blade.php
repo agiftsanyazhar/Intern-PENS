@@ -7,7 +7,6 @@
                   <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                      <div class="card-body">
                         <h2 class="mb-2 text-center">Sign In</h2>
-                        <p class="text-center">Login to stay connected.</p>
                         <x-auth-session-status class="mb-4" :status="session('status')" />
 
                         <!-- Validation Errors -->

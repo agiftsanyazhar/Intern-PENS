@@ -19,7 +19,7 @@
 
 <link rel="stylesheet" href="{{asset('vendor/aos/dist/aos.css')}}" />
 <style>
-    th.hide-search input{
-       display: none;
-    }
- </style>
+   th.hide-search input{
+      display: none;
+   }
+</style>

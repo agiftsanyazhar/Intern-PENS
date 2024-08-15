@@ -34,9 +34,9 @@ class UserRequest extends FormRequest
             case 'post':
                 $rules = [
                     'name' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users,email',
+                    'email' => 'required|string|email|max:255|unique:users,email|unique:customers,email',
                     'password' => 'required|string|min:8|confirmed',
-                    'phone' => 'required|string|max:255|unique:users,phone',
+                    'phone' => 'required|string|max:255|unique:users,phone|unique:customers,phone',
                     'role' => 'required|exists:roles,id',
                     'note' => 'nullable|string|max:255',
                 ];
@@ -44,9 +44,9 @@ class UserRequest extends FormRequest
             case 'patch':
                 $rules = [
                     'name' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users,email,' . $userId,
+                    'email' => 'required|string|email|max:255|unique:customers,email|unique:users,email,' . $userId,
                     'password' => 'confirmed|min:8|nullable',
-                    'phone' => 'required|string|max:255|unique:users,phone,' . $userId,
+                    'phone' => 'required|string|max:255|unique:customers,phone|unique:users,phone,' . $userId,
                     'role' => 'required|exists:roles,id',
                     'note' => 'nullable|string|max:255',
                 ];

@@ -7,7 +7,7 @@
                 <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
                 <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
             </svg>
-            <h5 class="logo-title ms-3">{{env('APP_NAME')}}</h5>
+            <h5 class="logo-title ms-3">PT Mitral</h5>
         </a>
         <button class="btn btn-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">Toggle offcanvas</button>
         <div class="offcanvas-lg offcanvas-end header-one" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
@@ -30,7 +30,7 @@
                     <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
                     <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
                 </svg>
-                <h5 class="logo-title ms-3 text-white">{{env('APP_NAME')}}</h5>
+                <h5 class="logo-title ms-3 text-white">PT Mitral</h5>
             </a>
             <ul class=" navbar-nav ">
                 <li class="nav-item"><a class="nav-link {{activeRoute(route('landing-pages.blog'))}}" href="{{route('landing-pages.blog')}}"> Blog </a></li>

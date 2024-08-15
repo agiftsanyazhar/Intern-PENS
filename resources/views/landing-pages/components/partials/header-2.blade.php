@@ -92,7 +92,7 @@
                                 <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2"
                                     transform="rotate(45 10.5562 -0.556152)" fill="currentColor"></rect>
                             </svg>
-                            <h5 class="logo-title">{{ env('APP_NAME') }}</h5>
+                            <h5 class="logo-title">PT Mitral</h5>
                         </div>
                         <button class="btn-close float-end px-3"></button>
                     </div>
