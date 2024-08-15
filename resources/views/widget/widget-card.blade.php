@@ -556,5 +556,4 @@
             </div>
         </div>
     </div>
-    @include('partials.components.share-offcanvas')
 </x-app-layout>
