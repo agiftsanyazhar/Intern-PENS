@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\OpportunityState;
+use App\Models\OpportunityStateDetail;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
-class OpportunityStateDataTable extends DataTable
+class OpportunityStateDetailDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -19,9 +19,6 @@ class OpportunityStateDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('company_name', function ($query) {
-                return $query->customer ? $query->customer->company_name : '-';
-            })
             ->editColumn('opportunity_status_id', function ($query) {
                 switch ($query->opportunity_status_id) {
                     case 1:
@@ -38,18 +35,6 @@ class OpportunityStateDataTable extends DataTable
                         return '-';
                 }
                 return $query->opportunity_status_id ? $query->customer->company_name : '-';
-            })
-            ->editColumn('opportunity_value', function ($query) {
-                return 'Rp' . number_format($query->opportunity_value, 0, ',', '.');
-            })
-            ->editColumn('title', function ($query) {
-                $title = $query->title;
-                if (strlen($title) > 10) {
-                    $tooltipTitle = $title;
-                    $title = substr($title, 0, 10) . '...';
-                    return '<span title="' . $tooltipTitle . '" style="color: #3a57e8;">' . $title . '</span>';
-                }
-                return $title;
             })
             ->editColumn('description', function ($query) {
                 $description = $query->description;
@@ -76,7 +61,7 @@ class OpportunityStateDataTable extends DataTable
                 return date('Y/m/d h.i', strtotime($query->updated_at));
             })
             ->addColumn('action', 'opportunity-state.action')
-            ->rawColumns(['action', 'title', 'description']);
+            ->rawColumns(['action', 'description']);
     }
 
     /**
@@ -85,9 +70,12 @@ class OpportunityStateDataTable extends DataTable
      * @param \App\Models\OpportunityState $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query()
+    public function query(OpportunityStateDetail $model)
     {
-        return OpportunityState::query();
+        // Assuming you have access to the $opportunityState object or its ID
+        $opportunityStateId = $this->id;  // Pass the id when calling the DataTable class
+
+        return $model->newQuery()->where('opportunity_state_id', $opportunityStateId);
     }
 
     /**
@@ -117,10 +105,7 @@ class OpportunityStateDataTable extends DataTable
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
-            ['data' => 'company_name', 'name' => 'company.name', 'title' => 'Customer Name'],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
-            ['data' => 'opportunity_value', 'name' => 'opportunity_value', 'title' => 'Opportunity Value'],
-            ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
             ['data' => 'created_by', 'name' => 'user.name', 'title' => 'Created By'],
             ['data' => 'updated_by', 'name' => 'user.name', 'title' => 'Updated By'],

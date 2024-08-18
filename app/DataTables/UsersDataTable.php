@@ -41,7 +41,6 @@ class UsersDataTable extends DataTable
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d h.i', strtotime($query->created_at));
             })
-
             ->addColumn('action', 'users.action')
             ->rawColumns(['action', 'role']);
     }

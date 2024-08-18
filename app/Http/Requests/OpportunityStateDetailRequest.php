@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class OpportunityStateRequest extends FormRequest
+class OpportunityStateDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,32 +29,21 @@ class OpportunityStateRequest extends FormRequest
         switch ($method) {
             case 'post':
                 $rules = [
-                    'customer_id' => 'required|exists:customers,id',
+                    'opportunity_state_id' => 'required|integer',
                     'opportunity_status_id' => 'required|integer',
-                    'opportunity_value' => 'required|numeric',
-                    'title' => 'required|string|max:255',
                     'description' => 'required|string',
                 ];
                 break;
             case 'patch':
                 $rules = [
-                    'customer_id' => 'required|exists:customers,id',
+                    'opportunity_state_id' => 'required|integer',
                     'opportunity_status_id' => 'required|integer',
-                    'opportunity_value' => 'required|numeric',
-                    'title' => 'required|string|max:255',
                     'description' => 'required|string',
                 ];
                 break;
         }
 
         return $rules;
-    }
-
-    public function messages()
-    {
-        return [
-            'title.max' => 'Opportunity Status Name is too long.',
-        ];
     }
 
     protected function failedValidation(Validator $validator)

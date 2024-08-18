@@ -21,25 +21,25 @@ class OpportunityStateDetailSeeder extends Seeder
                 'created_by' => 1
             ],
             [
-                'opportunity_state_id' => 2,
+                'opportunity_state_id' => 1,
                 'opportunity_status_id' => 2,
                 'description' => 'Second opportunity state detail data',
                 'created_by' => 1
             ],
             [
-                'opportunity_state_id' => 3,
+                'opportunity_state_id' => 1,
                 'opportunity_status_id' => 3,
                 'description' => 'Third opportunity state detail data',
                 'created_by' => 1
             ],
             [
-                'opportunity_state_id' => 4,
+                'opportunity_state_id' => 2,
                 'opportunity_status_id' => 4,
                 'description' => 'Fourth opportunity state detail data',
                 'created_by' => 1
             ],
             [
-                'opportunity_state_id' => 5,
+                'opportunity_state_id' => 2,
                 'opportunity_status_id' => 5,
                 'description' => 'Fifth opportunity state detail data',
                 'created_by' => 1

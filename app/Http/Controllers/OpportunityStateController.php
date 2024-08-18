@@ -27,7 +27,7 @@ class OpportunityStateController extends Controller
         $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State')]);
         $auth_user = AuthHelper::authSession();
         $assets = ['data-table'];
-        $headerAction = '<a href="' . route('opportunity-state.create') . '" class="btn btn-sm btn-primary" role="button">Add Opportunity</a>';
+        $headerAction = '<a href="' . route('opportunity-state.create') . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State</a>';
 
         return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));
     }

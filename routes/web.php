@@ -1,13 +1,18 @@
 <?php
 
 // Controllers
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Security\RolePermission;
-use App\Http\Controllers\Security\RoleController;
-use App\Http\Controllers\Security\PermissionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OpportunityStateController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\{
+    CustomerController,
+    HomeController,
+    OpportunityStateController,
+    OpportunityStateDetailController,
+    UserController,
+};
+use App\Http\Controllers\Security\{
+    PermissionController,
+    RoleController,
+    RolePermission,
+};
 use Illuminate\Support\Facades\Artisan;
 
 // Packages
@@ -50,6 +55,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Opportunity State Module
     Route::resource('opportunity-state', OpportunityStateController::class);
+    // Opportunity State Detail Module
+    Route::group(['prefix' => 'opportunity-state'], function () {
+        Route::get('detail/{opportunity_state_id}', [OpportunityStateDetailController::class, 'index'])->name('opportunity-state-detail.index');
+        Route::get('detail/{opportunity_state_id}/create', [OpportunityStateDetailController::class, 'create'])->name('opportunity-state-detail.create');
+        Route::post('detail/store', [OpportunityStateDetailController::class, 'store'])->name('opportunity-state-detail.store');
+        Route::get('detail/{opportunity_state_id}/edit/{opportunity_state_detail_id}', [OpportunityStateDetailController::class, 'edit'])->name('opportunity-state-detail.edit');
+        Route::delete('detail/{opportunity_state_id}/delete/{opportunity_state_detail_id}', [OpportunityStateDetailController::class, 'delete'])->name('opportunity-state-detail.delete');
+    });
 });
 
 //Landing-Pages Routes
