@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\DataTables\OpportunityStateDataTable;
 use App\Helpers\AuthHelper;
 use App\Http\Requests\OpportunityStateRequest;
-use App\Models\OpportunityState;
+use App\Models\{
+    Customer,
+    OpportunityState,
+};
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class OpportunityStateController extends Controller
@@ -29,13 +34,27 @@ class OpportunityStateController extends Controller
 
     public function create()
     {
-        return view('opportunity-state.form');
+        $customers = Customer::all()->pluck('company_name', 'id');
+
+        return view('opportunity-state.form', compact('customers'));
     }
 
     public function store(OpportunityStateRequest $request)
     {
         try {
-            $data = $request->only(['opportunity_status', 'note']);
+            $data = $request->only([
+                'customer_id',
+                'opportunity_status_id',
+                'opportunity_value',
+                'title',
+                'description',
+                'created_by',
+                'created_at',
+                'updated_by'
+            ]);
+
+            $data['created_by'] = AuthHelper::authSession()->id;
+            $data['created_at'] = Carbon::now();
 
             OpportunityState::create($data);
 
@@ -52,8 +71,9 @@ class OpportunityStateController extends Controller
     public function edit($id)
     {
         $data = OpportunityState::findOrFail($id);
+        $customers = Customer::all()->pluck('company_name', 'id');
 
-        return view('opportunity-state.form', compact('data', 'id'));
+        return view('opportunity-state.form', compact('data', 'customers', 'id'));
     }
 
     public function update(OpportunityStateRequest $request, $id)
@@ -61,7 +81,16 @@ class OpportunityStateController extends Controller
         try {
             $opportunityState = OpportunityState::findOrFail($id);
 
-            $data = $request->only(['opportunity_status', 'note']);
+            $data = $request->only([
+                'customer_id',
+                'opportunity_status_id',
+                'opportunity_value',
+                'title',
+                'description',
+                'updated_by'
+            ]);
+
+            $data['updated_by'] = AuthHelper::authSession()->id;
 
             $opportunityState->update($data);
 
@@ -75,12 +104,19 @@ class OpportunityStateController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $opportunityState = OpportunityState::findOrFail($id);
 
+            $data = $request->only([
+                'deleted_by'
+            ]);
+
             if ($opportunityState) {
+                $data['deleted_by'] = AuthHelper::authSession()->id;
+                $opportunityState->update($data);
+
                 $opportunityState->delete();
                 $status = 'success';
                 $message = __('global-message.delete_form', ['form' => __('Opportunity State')]);

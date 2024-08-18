@@ -25,6 +25,7 @@ class CreateCustomersTable extends Migration
             $table->string('company_pic_phone')->unique();
             $table->longText('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

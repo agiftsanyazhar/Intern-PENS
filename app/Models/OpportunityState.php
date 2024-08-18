@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{
+    Model,
+    SoftDeletes,
+};
 use Illuminate\Database\Eloquent\Relations\{
     BelongsTo,
     HasMany,
@@ -11,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\{
 
 class OpportunityState extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -25,8 +28,18 @@ class OpportunityState extends Model
         return $this->hasMany(OpportunityStateDetail::class);
     }
 
-    public function user(): BelongsTo
+    public function createdByUser()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 }

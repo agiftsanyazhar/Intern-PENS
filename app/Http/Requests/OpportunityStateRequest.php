@@ -30,14 +30,20 @@ class OpportunityStateRequest extends FormRequest
         switch ($method) {
             case 'post':
                 $rules = [
-                    'opportunity_status' => 'required|string|max:255|unique:opportunity_states,opportunity_status',
-                    'note' => 'nullable|string|max:255',
+                    'customer_id' => 'required|exists:customers,id',
+                    'opportunity_status_id' => 'required|integer',
+                    'opportunity_value' => 'required|numeric',
+                    'title' => 'required|string|max:255',
+                    'description' => 'required|string',
                 ];
                 break;
             case 'patch':
                 $rules = [
-                    'opportunity_status' => 'required|string|max:255|unique:opportunity_states,opportunity_status,' . $opportunityId,
-                    'note' => 'nullable|string|max:255',
+                    'customer_id' => 'required|exists:customers,id',
+                    'opportunity_status_id' => 'required|integer',
+                    'opportunity_value' => 'required|numeric',
+                    'title' => 'required|string|max:255',
+                    'description' => 'required|string',
                 ];
                 break;
         }
@@ -48,8 +54,7 @@ class OpportunityStateRequest extends FormRequest
     public function messages()
     {
         return [
-            'opportunity_status.max' => 'Opportunity Status Name is too long.',
-            'note.max' => 'Note is too long.',
+            'title.max' => 'Opportunity Status Name is too long.',
         ];
     }
 

@@ -42,24 +42,43 @@ class OpportunityStateDataTable extends DataTable
             ->editColumn('opportunity_value', function ($query) {
                 return 'Rp' . number_format($query->opportunity_value, 0, ',', '.');
             })
-            ->editColumn('created_by', function ($query) {
-                return $query->user ? $query->user->name : '-';
+            ->editColumn('title', function ($query) {
+                $title = $query->title;
+                if (strlen($title) > 10) {
+                    $tooltipTitle = $title;
+                    $title = substr($title, 0, 10) . '...';
+                    return '<span title="' . $tooltipTitle . '" style="color: #3a57e8;">' . $title . '</span>';
+                }
+                return $title;
             })
-            // ->editColumn('updated_by', function ($query) {
-            //     return $query->user ? $query->user->name : '-';
-            // })
-            // ->editColumn('deleted_by', function ($query) {
-            //     return $query->user ? $query->user->name : '-';
-            // })
+            ->editColumn('description', function ($query) {
+                $description = $query->description;
+                if (strlen($description) > 25) {
+                    $tooltipDescription = $description;
+                    $description = substr($description, 0, 25) . '...';
+                    return '<span title="' . $tooltipDescription . '" style="color: #3a57e8;">' . $description . '</span>';
+                }
+                return $description;
+            })
+            ->editColumn('created_by', function ($query) {
+                return $query->createdByUser ? $query->createdByUser->name : '-';
+            })
+            ->editColumn('updated_by', function ($query) {
+                return $query->updatedByUser ? $query->updatedByUser->name : '-';
+            })
+
+            ->editColumn('deleted_by', function ($query) {
+                return $query->deletedByUser ? $query->deletedByUser->name : '-';
+            })
             ->editColumn('created_at', function ($query) {
-                return date('Y/m/d h:i', strtotime($query->created_at));
+                return date('Y/m/d h.i', strtotime($query->created_at));
             })
             ->editColumn('updated_at', function ($query) {
-                return date('Y/m/d h:i', strtotime($query->updated_at));
+                return date('Y/m/d h.i', strtotime($query->updated_at));
             })
 
             ->addColumn('action', 'opportunity-state.action')
-            ->rawColumns(['action']);
+            ->rawColumns(['action', 'title', 'description']);
     }
 
     /**
@@ -115,7 +134,7 @@ class OpportunityStateDataTable extends DataTable
                 ->printable(false)
                 ->searchable(false)
                 ->width(60)
-                ->addClass('text-center'),
+                ->addClass('text-center hide-search'),
         ];
     }
 }

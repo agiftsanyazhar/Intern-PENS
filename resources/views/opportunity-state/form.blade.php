@@ -25,12 +25,33 @@
                   <div class="new-opportunity-state-info">
                      <div class="row">
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="opportunity_status">Opportunity State Name<span class="text-danger">*</span></label>
-                           {{ Form::text('opportunity_status', old('opportunity_status'), ['class' => 'form-control', 'placeholder' => 'Enter Opportunity State Name', 'required']) }}
+                           <label class="form-label" for="role">Customer<span class="text-danger">*</span></label>
+                           {{ Form::select('customer_id', $customers, old('customer_id'), ['class' => 'form-control', 'placeholder' => 'Select Customer', 'required']) }}
                         </div>
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="note">Note</label>
-                           {{ Form::textarea('note', old('note'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Note...']) }}
+                           <label class="form-label" for="title">Opportunity Name<span class="text-danger">*</span></label>
+                           {{ Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => 'Enter Opportunity Name', 'required']) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                           <label class="form-label" for="opportunity_status_id">Opportunity Status<span class="text-danger">*</span></label>
+                           {{ Form::select('opportunity_status_id', [
+                              '1' => 'Inquiry',
+                              '2' => 'Follow Up',
+                              '3' => 'Stale',
+                              '4' => 'Completed',
+                              '5' => 'Failed'
+                           ], old('opportunity_status_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'required']) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                           <label for="opportunity_value" class="form-label">Opportunity Value</label>
+                           <div class="form-group input-group">
+                              <span class="input-group-text">Rp</span>
+                              {{ Form::number('opportunity_value', old('opportunity_value'), ['class' => 'form-control', 'placeholder' => 'Ex: 1200000', 'required']) }}
+                           </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                           <label class="form-label" for="description">Description</label>
+                           {{ Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Description...']) }}
                         </div>
                      </div>
                      <button type="submit" class="btn btn-primary">{{ $id !== null ? 'Update' : 'Add' }} Opportunity State</button>

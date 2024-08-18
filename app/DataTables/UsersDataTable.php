@@ -39,7 +39,7 @@ class UsersDataTable extends DataTable
                 return '<span class="badge bg-' . $roleBadge . '">' . ucfirst($query->role) . '</span>';
             })
             ->editColumn('created_at', function ($query) {
-                return date('Y/m/d', strtotime($query->created_at));
+                return date('Y/m/d h.i', strtotime($query->created_at));
             })
 
             ->addColumn('action', 'users.action')

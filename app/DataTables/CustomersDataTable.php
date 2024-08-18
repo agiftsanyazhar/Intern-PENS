@@ -20,8 +20,11 @@ class CustomersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
+            ->editColumn('description', function ($query) {
+                return $query->description ?? '-';
+            })
             ->editColumn('created_at', function ($query) {
-                return date('Y/m/d', strtotime($query->created_at));
+                return date('Y/m/d h.i', strtotime($query->created_at));
             })
             ->addColumn('action', 'customers.action')
             ->rawColumns(['action']);
@@ -66,7 +69,6 @@ class CustomersDataTable extends DataTable
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
-            ['data' => 'customer_name', 'name' => 'customer_name', 'title' => 'Customer Name'],
             ['data' => 'company_name', 'name' => 'company_name', 'title' => 'Company Name'],
             ['data' => 'company_address', 'name' => 'company_address', 'title' => 'Company Address'],
             ['data' => 'company_email', 'name' => 'company_email', 'title' => 'Company Email'],
