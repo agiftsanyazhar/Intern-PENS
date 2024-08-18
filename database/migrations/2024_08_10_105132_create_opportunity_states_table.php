@@ -20,11 +20,11 @@ return new class extends Migration
             $table->integer('opportunity_status_id')
                 ->default(1)
                 ->comment('
-                1: Inquiry (Customer/sales just found the opportunity)
-                2: Follow Up (Sales in progress acquiring detail)
-                3: Stale (Customer/sales haven\'t give response for more than 5 working days)
-                4: Completed (PO issued by customer)
-                5: Failed (Customer cancel the opportunity/no reponse for more than 15 working days)
+                1: Inquiry (Customer/sales just found the opportunity); 
+                2: Follow Up (Sales in progress acquiring detail); 
+                3: Stale (Customer/sales haven\'t give response for more than 5 working days); 
+                4: Completed (PO issued by customer); 
+                5: Failed (Customer cancel the opportunity/no reponse for more than 15 working days); 
             ');
             $table->integer('opportunity_value');
             $table->string('title');
@@ -32,9 +32,17 @@ return new class extends Migration
             $table->foreignId('created_by')
                 ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');;
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
+                ->onDelete('cascade');
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('deleted_by')
+                ->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

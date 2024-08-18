@@ -19,6 +19,38 @@ class OpportunityStateDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
+            ->editColumn('company_name', function ($query) {
+                return $query->customer ? $query->customer->company_name : '-';
+            })
+            ->editColumn('opportunity_status_id', function ($query) {
+                switch ($query->opportunity_status_id) {
+                    case 1:
+                        return 'Inquiry';
+                    case 2:
+                        return 'Follow Up';
+                    case 3:
+                        return 'Stale';
+                    case 4:
+                        return 'Completed';
+                    case 5:
+                        return 'Failed';
+                    default:
+                        return '-';
+                }
+                return $query->opportunity_status_id ? $query->customer->company_name : '-';
+            })
+            ->editColumn('opportunity_value', function ($query) {
+                return 'Rp' . number_format($query->opportunity_value, 0, ',', '.');
+            })
+            ->editColumn('created_by', function ($query) {
+                return $query->user ? $query->user->name : '-';
+            })
+            // ->editColumn('updated_by', function ($query) {
+            //     return $query->user ? $query->user->name : '-';
+            // })
+            // ->editColumn('deleted_by', function ($query) {
+            //     return $query->user ? $query->user->name : '-';
+            // })
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d h:i', strtotime($query->created_at));
             })
@@ -68,8 +100,14 @@ class OpportunityStateDataTable extends DataTable
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
-            ['data' => 'opportunity_status', 'name' => 'opportunity_status', 'title' => 'Opportunity Status'],
-            ['data' => 'note', 'name' => 'note', 'title' => 'Note'],
+            ['data' => 'company_name', 'name' => 'company.name', 'title' => 'Customer Name'],
+            ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status Name'],
+            ['data' => 'opportunity_value', 'name' => 'opportunity_value', 'title' => 'Opportunity Value'],
+            ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
+            ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
+            ['data' => 'created_by', 'name' => 'user.name', 'title' => 'Created By'],
+            ['data' => 'updated_by', 'name' => 'user.name', 'title' => 'Updated By'],
+            ['data' => 'deleted_by', 'name' => 'user.name', 'title' => 'Deleted By'],
             ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
             ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Updated At'],
             Column::computed('action')
