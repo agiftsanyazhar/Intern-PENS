@@ -38,8 +38,14 @@ class UsersDataTable extends DataTable
                 }
                 return '<span class="badge bg-' . $roleBadge . '">' . ucfirst($query->role) . '</span>';
             })
-            ->editColumn('created_at', function ($query) {
-                return date('Y/m/d h.i', strtotime($query->created_at));
+            ->editColumn('note', function ($query) {
+                $note = $query->note ?? '-';
+                if (strlen($note) > 25) {
+                    $tooltipNote = $note;
+                    $note = substr($note, 0, 25) . '...';
+                    return '<span title="' . $tooltipNote . '" style="color: #3a57e8;">' . $note . '</span>';
+                }
+                return $note;
             })
             ->addColumn('action', 'users.action')
             ->rawColumns(['action', 'role']);

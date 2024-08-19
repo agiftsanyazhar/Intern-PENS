@@ -1,7 +1,7 @@
 <x-app-layout :assets="$assets ?? []">
    <div>
       @php
-         $id = $id ?? null;
+         $id = $opportunityStateDetailId ?? null;
       @endphp
 
       @if(isset($id))
@@ -18,19 +18,15 @@
                      <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Opportunity State Detail Information</h4>
                   </div>
                   <div class="card-action">
-                     <a href="{{ route('opportunity-state-detail.index', $opportunityStateId) }}" class="btn btn-sm btn-primary" role="button">Back</a>
+                     <a href="{{ route('opportunity-state.show', $opportunityStateId) }}" class="btn btn-sm btn-primary" role="button">Back</a>
                   </div>
                </div>
                <div class="card-body">
                   <div class="new-opportunity-state-detail-info">
                      <div class="row">
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="title">Opportunity Name<span class="text-danger">*</span></label>
-                           {{ Form::text('opportunity_state_id', $opportunityStateId, ['class' => 'form-control', 'placeholder' => 'Enter Opportunity Name', 'hidden' => true, 'required']) }}
-                           {{ Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => 'Enter Opportunity Name', 'required']) }}
-                        </div>
-                        <div class="form-group col-md-12">
                            <label class="form-label" for="opportunity_status_id">Opportunity Status<span class="text-danger">*</span></label>
+                           {{ Form::text('opportunity_state_id', $opportunityStateId, ['class' => 'form-control', 'hidden' => true, 'required']) }}
                            {{ Form::select('opportunity_status_id', [
                               '1' => 'Inquiry',
                               '2' => 'Follow Up',

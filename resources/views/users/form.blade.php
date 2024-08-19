@@ -37,7 +37,7 @@
                         </div>       
                         <div class="form-group col-md-12">
                            <label class="form-label" for="role">Role<span class="text-danger">*</span></label>
-                           {{ Form::select('role', $roles, old('role'), ['class' => 'form-control', 'placeholder' => 'Select Role', 'required']) }}
+                           {{ Form::select('role', $roles, old('role', $data->role ?? null), ['class' => 'form-control', 'placeholder' => 'Select Role', 'required']) }}
                         </div>                  
                         <div class="form-group col-md-12">
                            <label class="form-label" for="note">Note</label>

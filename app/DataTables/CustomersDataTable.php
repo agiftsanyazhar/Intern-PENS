@@ -20,14 +20,26 @@ class CustomersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('description', function ($query) {
-                return $query->description ?? '-';
+            ->editColumn('company_address', function ($query) {
+                $companyAddress = $query->company_address;
+                if (strlen($companyAddress) > 25) {
+                    $tooltipCompanyAddress = $companyAddress;
+                    $companyAddress = substr($companyAddress, 0, 25) . '...';
+                    return '<span title="' . $tooltipCompanyAddress . '" style="color: #3a57e8;">' . $companyAddress . '</span>';
+                }
+                return $companyAddress;
             })
-            ->editColumn('created_at', function ($query) {
-                return date('Y/m/d h.i', strtotime($query->created_at));
+            ->editColumn('description', function ($query) {
+                $description = $query->description ?? '-';
+                if (strlen($description) > 25) {
+                    $tooltipDescription = $description;
+                    $description = substr($description, 0, 25) . '...';
+                    return '<span title="' . $tooltipDescription . '" style="color: #3a57e8;">' . $description . '</span>';
+                }
+                return $description;
             })
             ->addColumn('action', 'customers.action')
-            ->rawColumns(['action']);
+            ->rawColumns(['action', 'company_address', 'description']);
     }
 
     /**

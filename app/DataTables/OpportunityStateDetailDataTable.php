@@ -55,12 +55,12 @@ class OpportunityStateDetailDataTable extends DataTable
             //     return $query->deletedByUser ? $query->deletedByUser->name : '-';
             // })
             ->editColumn('created_at', function ($query) {
-                return date('Y/m/d h.i', strtotime($query->created_at));
+                return date('Y/m/d H:i', strtotime($query->created_at));
             })
             ->editColumn('updated_at', function ($query) {
-                return date('Y/m/d h.i', strtotime($query->updated_at));
+                return date('Y/m/d H:i', strtotime($query->updated_at));
             })
-            ->addColumn('action', 'opportunity-state.action')
+            ->addColumn('action', 'opportunity-state.opportunity-state-detail.action')
             ->rawColumns(['action', 'description']);
     }
 

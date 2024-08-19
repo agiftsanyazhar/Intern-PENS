@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\OpportunityStateDetailDataTable;
 use App\Helpers\AuthHelper;
 use App\Http\Requests\OpportunityStateDetailRequest;
 use App\Models\{
@@ -11,32 +10,16 @@ use App\Models\{
 };
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class OpportunityStateDetailController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(OpportunityStateDetailDataTable $dataTable, $id)
-    {
-        $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State Detail')]);
-        $auth_user = AuthHelper::authSession();
-        $assets = ['data-table'];
-        $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>';
-
-        $opportunityState = OpportunityState::findOrFail($id);
-
-        return $dataTable->with('id', $id)->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction', 'opportunityState', 'id'));
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
+    public function create($opportunityStateId)
     {
-        $opportunityStateId = $id;
-
         return view('opportunity-state.opportunity-state-detail.form', compact('opportunityStateId'));
     }
 
@@ -60,7 +43,7 @@ class OpportunityStateDetailController extends Controller
 
             OpportunityStateDetail::create($data);
 
-            return redirect()->route('opportunity-state-detail.index', $data['opportunity_state_id'])->withSuccess('Opportunity State Detail Successfully Added');
+            return redirect()->route('opportunity-state.show', $data['opportunity_state_id'])->withSuccess('Opportunity State Detail Successfully Added');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->messages();
 
@@ -73,11 +56,11 @@ class OpportunityStateDetailController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($opportunityStateId, $opportunityStateDetailId)
     {
-        $data = OpportunityStateDetail::findOrFail($id);
+        $data = OpportunityStateDetail::findOrFail($opportunityStateDetailId);
 
-        return view('opportunity-state.opportunity-state-detail.form', compact('data', 'id'));
+        return view('opportunity-state.opportunity-state-detail.form', compact('data', 'opportunityStateId', 'opportunityStateDetailId'));
     }
 
     /**
@@ -101,7 +84,7 @@ class OpportunityStateDetailController extends Controller
 
             $opportunityStateDetail->update($data);
 
-            return redirect()->route('opportunity-state.index')->withSuccess('Opportunity State Detail Successfully Updated');
+            return redirect()->route('opportunity-state.show', $data['opportunity_state_id'])->withSuccess('Opportunity State Detail Successfully Updated');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->messages();
 
@@ -114,8 +97,38 @@ class OpportunityStateDetailController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OpportunityStateDetailRequest $opportunityDetail)
+    public function destroy(Request $request, $id)
     {
-        //
+        try {
+            $opportunityStateDetail = OpportunityStateDetail::findOrFail($id);
+
+            $data = $request->only([
+                'deleted_by'
+            ]);
+
+            if ($opportunityStateDetail) {
+                $data['deleted_by'] = AuthHelper::authSession()->id;
+                $opportunityStateDetail->update($data);
+
+                $opportunityStateDetail->delete();
+                $status = 'success';
+                $message = __('global-message.delete_form', ['form' => __('Opportunity State')]);
+            } else {
+                $status = 'error';
+                $message = __('global-message.delete_form_failed', ['form' => __('Opportunity State')]);
+            }
+
+            if (request()->ajax()) {
+                return response()->json(['status' => $status, 'message' => $message, 'datatable_reload' => 'dataTable_wrapper']);
+            }
+
+            return redirect()->back()->with($status, $message);
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->messages();
+
+            return redirect()->back()->withInput()->withErrors($errors);
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

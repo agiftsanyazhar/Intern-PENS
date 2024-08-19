@@ -19,4 +19,19 @@ class OpportunityStateDetail extends Model
     {
         return $this->belongsTo(OpportunityState::class);
     }
+
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function deletedByUser()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
 }

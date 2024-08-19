@@ -25,18 +25,6 @@
                   <div class="new-customer-info">
                      <div class="row">
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="user_pic_id">User PIC<span class="text-danger">*</span></label>
-                           {{ Form::select('user_pic_id', $users, old('user_pic_id'), ['class' => 'form-control', 'placeholder' => 'Select User PIC', 'required']) }}
-                        </div>
-                        <div class="form-group col-md-12">
-                           <label class="form-label" for="opportunity_state_id">Opportunity State<span class="text-danger">*</span></label>
-                           {{ Form::select('opportunity_state_id', $opportunityStates, old('opportunity_state_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity State', 'required']) }}
-                        </div>
-                        <div class="form-group col-md-12">
-                           <label class="form-label" for="customer_name">Customer Name<span class="text-danger">*</span></label>
-                           {{ Form::text('customer_name', old('customer_name'), ['class' => 'form-control', 'placeholder' => 'Enter Customer Name', 'required']) }}
-                        </div>
-                        <div class="form-group col-md-12">
                            <label class="form-label" for="company_name">Company Name<span class="text-danger">*</span></label>
                            {{ Form::text('company_name', old('company_name'), ['class' => 'form-control', 'placeholder' => 'Enter Company Name', 'required']) }}
                         </div>

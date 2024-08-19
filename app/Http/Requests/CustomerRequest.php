@@ -30,9 +30,6 @@ class CustomerRequest extends FormRequest
         switch ($method) {
             case 'post':
                 $rules = [
-                    'user_pic_id' => 'required|exists:users,id',
-                    'opportunity_state_id' => 'required|exists:opportunity_states,id',
-                    'customer_name' => 'required|string|max:255',
                     'company_name' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
                     'company_email' => 'required|string|email|max:255|unique:customers,company_email|unique:users,email',
@@ -46,9 +43,6 @@ class CustomerRequest extends FormRequest
                 break;
             case 'patch':
                 $rules = [
-                    'user_pic_id' => 'required|exists:users,id',
-                    'opportunity_state_id' => 'required|exists:opportunity_states,id',
-                    'customer_name' => 'required|string|max:255',
                     'company_name' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
                     'company_email' => 'required|string|email|max:255|unique:users,email|unique:customers,company_email,' . $customerId,
@@ -68,7 +62,6 @@ class CustomerRequest extends FormRequest
     public function messages()
     {
         return [
-            'customer_name.max' => 'Customer Name is too long.',
             'company_name.max' => 'Company Name is too long.',
             'company_address.max' => 'Company Address is too long.',
             'company_email.max' => 'Company Email is too long.',

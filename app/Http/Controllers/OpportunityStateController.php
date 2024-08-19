@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\OpportunityStateDataTable;
+use App\DataTables\{
+    OpportunityStateDataTable,
+    OpportunityStateDetailDataTable
+};
 use App\Helpers\AuthHelper;
 use App\Http\Requests\OpportunityStateRequest;
 use App\Models\{
@@ -66,6 +69,17 @@ class OpportunityStateController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function show(OpportunityStateDetailDataTable $dataTable, $id)
+    {
+        $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State Detail')]);
+        $auth_user = AuthHelper::authSession();
+        $assets = ['data-table'];
+        $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>
+                         <a href="' . route('opportunity-state.index') . '" class="btn btn-sm btn-primary" role="button">Back</a>';
+
+        return $dataTable->with('id', $id)->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction', 'id'));
     }
 
     public function edit($id)

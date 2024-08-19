@@ -37,9 +37,6 @@ class CustomerController extends Controller
     {
         try {
             $data = $request->only([
-                'user_pic_id',
-                'opportunity_state_id',
-                'customer_name',
                 'company_name',
                 'company_address',
                 'company_email',
@@ -78,9 +75,6 @@ class CustomerController extends Controller
             $customer = Customer::findOrFail($id);
 
             $data = $request->only([
-                'user_pic_id',
-                'opportunity_state_id',
-                'customer_name',
                 'company_name',
                 'company_address',
                 'company_email',
