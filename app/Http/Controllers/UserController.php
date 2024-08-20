@@ -34,7 +34,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all()->pluck('name', 'id'); // Assuming 'name' is the correct column
+        $roles = Role::all()->pluck('title', 'id'); // Assuming 'name' is the correct column
 
         return view('users.form', compact('roles'));
     }
@@ -76,7 +76,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $data = User::findOrFail($id); // Find the user
-        $roles = Role::all()->pluck('name', 'id'); // Fetch roles for the form
+        $roles = Role::all()->pluck('title', 'id'); // Fetch roles for the form
 
         return view('users.form', compact('data', 'roles', 'id'));
     }

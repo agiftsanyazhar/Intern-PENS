@@ -24,19 +24,19 @@ class UsersDataTable extends DataTable
                 switch ($query->role_id) {
                     case '1':
                         $roleBadge = 'primary';
-                        $roleName = 'Admin';
+                        $roleName = $query->role->title;
                         break;
                     case '2':
                         $roleBadge = 'success';
-                        $roleName = 'Division Head';
+                        $roleName = $query->role->title;
                         break;
                     case '3':
                         $roleBadge = 'info';
-                        $roleName = 'Sales Head';
+                        $roleName = $query->role->title;
                         break;
                     case '4':
                         $roleBadge = 'gray';
-                        $roleName = 'Sales';
+                        $roleName = $query->role->title;
                         break;
                 }
                 return '<span class="badge bg-' . $roleBadge . '">' . $roleName . '</span>';
