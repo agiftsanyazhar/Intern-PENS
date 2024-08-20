@@ -76,10 +76,14 @@ class OpportunityStateController extends Controller
         $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State Detail')]);
         $auth_user = AuthHelper::authSession();
         $assets = ['data-table'];
-        $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>
-                         <a href="' . route('opportunity-state.index') . '" class="btn btn-sm btn-primary" role="button">Back</a>';
+        $opportunityState = OpportunityState::find($id);
 
-        return $dataTable->with('id', $id)->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction', 'id'));
+        $masterDetail = $opportunityState;
+        $backAction = '<a href="' . route('opportunity-state.index') . '" class="btn btn-sm btn-primary" role="button">Back</a>';
+
+        $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>';
+
+        return $dataTable->with('id', $id)->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction', 'backAction', 'masterDetail', 'id'));
     }
 
     public function edit($id)

@@ -20,7 +20,9 @@ class OpportunityStateDetailController extends Controller
      */
     public function create($opportunityStateId)
     {
-        return view('opportunity-state.opportunity-state-detail.form', compact('opportunityStateId'));
+        $opportunityState = OpportunityState::find($opportunityStateId);
+
+        return view('opportunity-state.opportunity-state-detail.form', compact('opportunityState', 'opportunityStateId'));
     }
 
     /**
@@ -59,8 +61,9 @@ class OpportunityStateDetailController extends Controller
     public function edit($opportunityStateId, $opportunityStateDetailId)
     {
         $data = OpportunityStateDetail::findOrFail($opportunityStateDetailId);
+        $opportunityState = OpportunityState::find($opportunityStateId);
 
-        return view('opportunity-state.opportunity-state-detail.form', compact('data', 'opportunityStateId', 'opportunityStateDetailId'));
+        return view('opportunity-state.opportunity-state-detail.form', compact('data', 'opportunityStateId', 'opportunityState', 'opportunityStateDetailId'));
     }
 
     /**

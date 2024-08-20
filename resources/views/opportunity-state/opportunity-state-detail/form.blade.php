@@ -15,10 +15,68 @@
             <div class="card">
                <div class="card-header d-flex justify-content-between">
                   <div class="header-title">
-                     <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Opportunity State Detail Information</h4>
+                     <h4 class="card-title">{{ $opportunityState->title }}</h4>
                   </div>
                   <div class="card-action">
                      <a href="{{ route('opportunity-state.show', $opportunityStateId) }}" class="btn btn-sm btn-primary" role="button">Back</a>
+                  </div>
+               </div>
+               <div class="card-body">
+                  <div class="row">
+                     <div class="col-md-2">
+                        <p class="fw-bold">Customer Name:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ $opportunityState->customer->company_name }}</p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Status:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ getOpportunityStatus($opportunityState->opportunity_status_id) }}</p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Value:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>Rp{{ number_format($opportunityState->opportunity_value, 0, ',', '.') }}</p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Description:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ $opportunityState->description }}</p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Created By:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ $opportunityState->createdByUser->name }} <small>{{ date('Y/m/d H:i', strtotime($opportunityState->created_at )) }}</small></p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Updated By:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ $opportunityState->updatedByUser->name ?? '' }} <small>{{ $opportunityState->updated_by ? date('Y/m/d H:i', strtotime($opportunityState->updated_at)) : '' }}</small></p>
+                     </div>
+                     <div class="col-md-2">
+                        <p class="fw-bold">Deleted By:</p>
+                     </div>
+                     <div class="col-md-10">
+                        <p>{{ $opportunityState->deletedByUser->name ?? '' }} <small>{{ $opportunityState->deleted_by ? date('Y/m/d H:i', strtotime($opportunityState->deleted_at)) : '' }}</small></p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="col-xl-12 col-lg-12">
+            <div class="card">
+               <div class="card-header d-flex justify-content-between">
+                  <div class="header-title">
+                     <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Opportunity State Detail Information</h4>
                   </div>
                </div>
                <div class="card-body">
