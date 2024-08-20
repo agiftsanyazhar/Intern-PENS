@@ -26,7 +26,7 @@
                      <div class="row">
                         <div class="form-group col-md-12">
                            <label class="form-label" for="role">Customer<span class="text-danger">*</span></label>
-                           {{ Form::select('customer_id', $customers, old('customer_id'), ['class' => 'form-control', 'placeholder' => 'Select Customer', 'required']) }}
+                           {{ Form::select('customer_id', $customers, old('customer_id'), ['class' => 'form-control select2', 'placeholder' => 'Select Customer', 'required']) }}
                         </div>
                         <div class="form-group col-md-12">
                            <label class="form-label" for="title">Opportunity Name<span class="text-danger">*</span></label>

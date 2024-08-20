@@ -36,8 +36,8 @@
                            {{ Form::text('phone', old('phone'), ['class' => 'form-control', 'placeholder' => '+628123456789']) }}
                         </div>       
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="role">Role<span class="text-danger">*</span></label>
-                           {{ Form::select('role', $roles, old('role', $data->role ?? null), ['class' => 'form-control', 'placeholder' => 'Select Role', 'required']) }}
+                           <label class="form-label" for="role_id">Role<span class="text-danger">*</span></label>
+                           {{ Form::select('role_id', $roles, old('role_id'), ['class' => 'form-control', 'placeholder' => 'Select Role', 'required']) }}
                         </div>                  
                         <div class="form-group col-md-12">
                            <label class="form-label" for="note">Note</label>

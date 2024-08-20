@@ -48,17 +48,14 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         try {
-            $data = $request->only(['name', 'email', 'password', 'phone', 'role', 'note']);
+            $data = $request->only(['name', 'email', 'password', 'phone', 'role_id', 'note']);
 
             $data['name'] = $data['name'] ?? stristr($data['email'], "@", true) . rand(100, 1000);
             $data['password'] = bcrypt($data['password']);
 
-            $role = Role::find($data['role'])->name;
-            $data['role'] = $role;
-
             $user = User::create($data);
 
-            $user->assignRole($role);
+            $user->assignRole($data['role_id']);
 
             return redirect()->route('users.index')->withSuccess('User Successfully Added');
         } catch (ValidationException $e) {
@@ -101,17 +98,14 @@ class UserController extends Controller
                 return redirect()->back()->with('error', 'Permission denied');
             }
 
-            $data = $request->only(['name', 'email', 'password', 'phone', 'role', 'note']);
+            $data = $request->only(['name', 'email', 'password', 'phone', 'role_id', 'note']);
 
             $data['name'] = $data['name'] ?? stristr($data['email'], "@", true) . rand(100, 1000);
             $data['password'] = $request->password ? bcrypt($request->password) : $user->password;
 
-            $role = Role::find($data['role'])->name;
-            $data['role'] = $role;
-
             $user->update($data);
 
-            $user->syncRoles([$role]);
+            $user->syncRoles($data['role_id']);
 
             return redirect()->route('users.index')->withSuccess('User Successfully Updated');
         } catch (ValidationException $e) {

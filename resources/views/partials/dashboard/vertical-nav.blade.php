@@ -6,7 +6,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{activeRoute(route('dashboard'))}}" aria-current="page" href="{{route('dashboard')}}">
+        <a class="nav-link {{ request()->is('dashboard') || request()->is('dashboard/*') ? 'active' : '' }}" aria-current="page" href="{{route('dashboard')}}">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="0.4" d="M16.0756 2H19.4616C20.8639 2 22.0001 3.14585 22.0001 4.55996V7.97452C22.0001 9.38864 20.8639 10.5345 19.4616 10.5345H16.0756C14.6734 10.5345 13.5371 9.38864 13.5371 7.97452V4.55996C13.5371 3.14585 14.6734 2 16.0756 2Z" fill="currentColor"></path>
@@ -131,7 +131,7 @@
         </a>
         <ul class="sub-nav collapse" id="sidebar-user" data-bs-parent="#sidebar">
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('users.index'))}}" href="{{route('users.index')}}">
+                <a class="nav-link {{ request()->is('users') || request()->is('users/*') ? 'active' : '' }}" href="{{ route('users.index') }}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -164,7 +164,7 @@
         </a>
         <ul class="sub-nav collapse" id="sidebar-customer" data-bs-parent="#sidebar">
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('customers.index'))}}" href="{{route('customers.index')}}">
+                <a class="nav-link {{ request()->is('customers') || request()->is('customers/*') ? 'active' : '' }}" href="{{route('customers.index')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>
@@ -197,7 +197,7 @@
         </a>
         <ul class="sub-nav collapse" id="sidebar-opportunity" data-bs-parent="#sidebar">
             <li class="nav-item">
-                <a class="nav-link {{activeRoute(route('opportunity-state.index'))}}" href="{{route('opportunity-state.index')}}">
+                <a class="nav-link {{ request()->is('opportunity-state') || request()->is('opportunity-state/*') ? 'active' : '' }}" href="{{route('opportunity-state.index')}}">
                     <i class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                             <g>

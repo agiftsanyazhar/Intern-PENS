@@ -19,23 +19,27 @@ class UsersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('role', function ($query) {
+            ->editColumn('role_id', function ($query) {
                 $roleBadge = 'secondary';
-                switch ($query->role) {
-                    case 'admin':
+                switch ($query->role_id) {
+                    case '1':
                         $roleBadge = 'primary';
+                        $roleName = 'Admin';
                         break;
-                    case 'division-head':
+                    case '2':
                         $roleBadge = 'success';
+                        $roleName = 'Division Head';
                         break;
-                    case 'sales-head':
+                    case '3':
                         $roleBadge = 'info';
+                        $roleName = 'Sales Head';
                         break;
-                    case 'sales':
+                    case '4':
                         $roleBadge = 'gray';
+                        $roleName = 'Sales';
                         break;
                 }
-                return '<span class="badge bg-' . $roleBadge . '">' . ucfirst($query->role) . '</span>';
+                return '<span class="badge bg-' . $roleBadge . '">' . $roleName . '</span>';
             })
             ->editColumn('note', function ($query) {
                 $note = $query->note ?? '-';
@@ -47,7 +51,7 @@ class UsersDataTable extends DataTable
                 return $note;
             })
             ->addColumn('action', 'users.action')
-            ->rawColumns(['action', 'role']);
+            ->rawColumns(['action', 'role_id']);
     }
 
     /**
@@ -92,7 +96,7 @@ class UsersDataTable extends DataTable
             ['data' => 'name', 'name' => 'name', 'title' => 'Name'],
             ['data' => 'email', 'name' => 'email', 'title' => 'Email'],
             ['data' => 'phone', 'name' => 'phone', 'title' => 'Phone'],
-            ['data' => 'role', 'name' => 'role', 'title' => 'Role'],
+            ['data' => 'role_id', 'name' => 'role_id', 'title' => 'Role'],
             ['data' => 'note', 'name' => 'note', 'title' => 'Note'],
             Column::computed('action')
                 ->exportable(false)

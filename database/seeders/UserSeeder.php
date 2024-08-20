@@ -18,31 +18,31 @@ class UserSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('12345678'),
-                'role' => 'admin',
+                'role_id' => '1',
             ],
             [
                 'name' => 'Division Head',
                 'email' => 'division-head@gmail.com',
                 'password' => Hash::make('12345678'),
-                'role' => 'division-head',
+                'role_id' => '2',
             ],
             [
                 'name' => 'Sales Head',
                 'email' => 'sales-head@gmail.com',
                 'password' => Hash::make('12345678'),
-                'role' => 'sales-head',
+                'role_id' => '3',
             ],
             [
                 'name' => 'Sales',
                 'email' => 'sales@gmail.com',
                 'password' => Hash::make('12345678'),
-                'role' => 'sales',
+                'role_id' => '4',
             ],
         ];
 
         foreach ($users as $key => $value) {
             $user = User::create($value);
-            $user->assignRole($value['role']);
+            $user->assignRole($value['role_id']);
         }
     }
 }
