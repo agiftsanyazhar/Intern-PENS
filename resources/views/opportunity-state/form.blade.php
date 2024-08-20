@@ -43,15 +43,15 @@
                            ], old('opportunity_status_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'required']) }}
                         </div>
                         <div class="form-group col-md-6">
-                           <label for="opportunity_value" class="form-label">Opportunity Value</label>
+                           <label for="opportunity_value" class="form-label">Opportunity Value<span class="text-danger">*</span></label>
                            <div class="form-group input-group">
                               <span class="input-group-text">Rp</span>
                               {{ Form::number('opportunity_value', old('opportunity_value'), ['class' => 'form-control', 'placeholder' => 'Ex: 1200000', 'required']) }}
                            </div>
                         </div>
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="description">Description</label>
-                           {{ Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Description...']) }}
+                           <label class="form-label" for="description">Description<span class="text-danger">*</span></label>
+                           {{ Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Description...', 'required']) }}
                         </div>
                      </div>
                      <button type="submit" class="btn btn-primary">{{ $id !== null ? 'Update' : 'Add' }} Opportunity State</button>

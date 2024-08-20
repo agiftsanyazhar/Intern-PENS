@@ -44,11 +44,11 @@
                            {{ Form::textarea('note', old('note'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Note...']) }}
                         </div>
                         <div class="form-group col-md-6">
-                           <label class="form-label" for="pass">New Password</label>
+                           <label class="form-label" for="pass">New Password{!! $id !== null ? ' (Optional)' : '<span class="text-danger">*</span>' !!}</label>
                            {{ Form::password('password', ['class' => 'form-control', 'placeholder' => 'Enter New Password']) }}
                         </div>
                         <div class="form-group col-md-6">
-                           <label class="form-label" for="rpass">Repeat New Password</label>
+                           <label class="form-label" for="rpass">Repeat New Password{!! $id !== null ? ' (Optional)' : '<span class="text-danger">*</span>' !!}</label>
                            {{ Form::password('password_confirmation', ['class' => 'form-control', 'placeholder' => 'Repeat New Password']) }}
                         </div>
                      </div>

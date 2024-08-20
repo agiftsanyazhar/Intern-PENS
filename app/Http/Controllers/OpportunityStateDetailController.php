@@ -55,6 +55,16 @@ class OpportunityStateDetailController extends Controller
         }
     }
 
+    public function show($opportunityStateId, $opportunityStateDetailId)
+    {
+        $data = OpportunityStateDetail::findOrFail($opportunityStateDetailId);
+        $opportunityState = OpportunityState::find($opportunityStateId);
+
+        $show = true;
+
+        return view('opportunity-state.opportunity-state-detail.form', compact('data', 'opportunityStateId', 'opportunityState', 'opportunityStateDetailId', 'show'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

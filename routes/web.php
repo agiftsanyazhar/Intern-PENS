@@ -57,10 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('opportunity-state', OpportunityStateController::class);
 
     // Opportunity State Detail Module
-    Route::resource('opportunity-state-detail', OpportunityStateDetailController::class)->except(['create', 'edit']);
+    Route::resource('opportunity-state-detail', OpportunityStateDetailController::class)->except(['create', 'edit', 'show']);
     Route::group(['prefix' => 'opportunity-state'], function () {
         Route::get('{opportunityStateId}/create', [OpportunityStateDetailController::class, 'create'])->name('opportunity-state-detail.create');
         Route::get('{opportunityStateId}/edit/{opportunityStateDetailId}', [OpportunityStateDetailController::class, 'edit'])->name('opportunity-state-detail.edit');
+        Route::get('{opportunityStateId}/detail/{opportunityStateDetailId}', [OpportunityStateDetailController::class, 'show'])->name('opportunity-state-detail.show');
     });
 });
 

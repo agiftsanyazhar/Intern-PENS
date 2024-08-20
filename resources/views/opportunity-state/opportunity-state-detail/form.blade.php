@@ -76,7 +76,7 @@
             <div class="card">
                <div class="card-header d-flex justify-content-between">
                   <div class="header-title">
-                     <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Opportunity State Detail Information</h4>
+                     <h4 class="card-title">{{ $id !== null ? (isset($show) ? '' : 'Update') : 'New' }} Opportunity State Detail Information</h4>
                   </div>
                </div>
                <div class="card-body">
@@ -84,21 +84,23 @@
                      <div class="row">
                         <div class="form-group col-md-12">
                            <label class="form-label" for="opportunity_status_id">Opportunity Status<span class="text-danger">*</span></label>
-                           {{ Form::text('opportunity_state_id', $opportunityStateId, ['class' => 'form-control', 'hidden' => true, 'required']) }}
+                           {{ Form::text('opportunity_state_id', $opportunityStateId, ['class' => 'form-control', 'disabled' => isset($show) ? true : false, 'hidden' => true, 'required']) }}
                            {{ Form::select('opportunity_status_id', [
                               '1' => 'Inquiry',
                               '2' => 'Follow Up',
                               '3' => 'Stale',
                               '4' => 'Completed',
                               '5' => 'Failed'
-                           ], old('opportunity_status_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'required']) }}
+                           ], old('opportunity_status_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'disabled' => isset($show) ? true : false, 'required']) }}
                         </div>
                         <div class="form-group col-md-12">
-                           <label class="form-label" for="description">Description</label>
-                           {{ Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Description...']) }}
+                           <label class="form-label" for="description">Description<span class="text-danger">*</span></label>
+                           {{ Form::textarea('description', old('description'), ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Type Description...', 'disabled' => isset($show) ? true : false, 'required']) }}
                         </div>
                      </div>
-                     <button type="submit" class="btn btn-primary">{{ $id !== null ? 'Update' : 'Add' }} Opportunity State Detail</button>
+                     @unless(isset($show))
+                        <button type="submit" class="btn btn-primary">{{ $id !== null ? (isset($show) ? '' : 'Update') : 'New' }} Opportunity State Detail</button>
+                     @endunless
                   </div>
                </div>
             </div>
