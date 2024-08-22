@@ -127,7 +127,7 @@ class OpportunityStateDataTable extends DataTable
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
             ['data' => 'created_by', 'name' => 'created_by', 'title' => 'Created By'],
             ['data' => 'updated_by', 'name' => 'updated_by', 'title' => 'Updated By'],
-            ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
+            // ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
             ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
             ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Updated At'],
             // ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],

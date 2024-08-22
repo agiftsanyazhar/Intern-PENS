@@ -60,9 +60,9 @@ class OpportunityStateDetailDataTable extends DataTable
             ->editColumn('updated_at', function ($query) {
                 return date('Y/m/d H:i', strtotime($query->updated_at));
             })
-            ->editColumn('deleted_at', function ($query) {
-                return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
-            })
+            // ->editColumn('deleted_at', function ($query) {
+            //     return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
+            // })
             ->addColumn('action', 'opportunity-state.opportunity-state-detail.action')
             ->rawColumns(['action', 'description']);
     }
