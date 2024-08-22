@@ -180,6 +180,39 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link " data-bs-toggle="collapse" href="#sidebar-health" role="button" aria-expanded="false" aria-controls="sidebar-health">
+            <i class="icon">
+                <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.4" d="M12 14.5C9.23858 14.5 7 15.9624 7 18.2V19.5H17V18.2C17 15.9624 14.7614 14.5 12 14.5Z" fill="currentColor"></path>
+                    <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor"></path>
+                </svg>
+            </i>
+            
+            <span class="item-name">health</span>
+            <i class="right-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </i>
+        </a>
+        <ul class="sub-nav collapse" id="sidebar-health" data-bs-parent="#sidebar">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('health') || request()->is('health/*') ? 'active' : '' }}" href="{{route('health.index')}}">
+                    <i class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
+                            <g>
+                            <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                            </g>
+                        </svg>
+                    </i>
+                    <i class="sidenav-mini-icon"> C </i>
+                    <span class="item-name">Health List</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link " data-bs-toggle="collapse" href="#sidebar-opportunity" role="button" aria-expanded="false" aria-controls="sidebar-opportunity">
             <i class="icon">
                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
