@@ -19,7 +19,7 @@ class OpportunityStateDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('company_name', function ($query) {
+            ->editColumn('customer_id', function ($query) {
                 return $query->customer ? $query->customer->company_name : '-';
             })
             ->editColumn('opportunity_status_id', function ($query) {
@@ -66,18 +66,18 @@ class OpportunityStateDataTable extends DataTable
             ->editColumn('updated_by', function ($query) {
                 return $query->updatedByUser ? $query->updatedByUser->name : '-';
             })
-            ->editColumn('deleted_by', function ($query) {
-                return $query->deletedByUser ? $query->deletedByUser->name : '-';
-            })
+            // ->editColumn('deleted_by', function ($query) {
+            //     return $query->deletedByUser ? $query->deletedByUser->name : '-';
+            // })
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d H:i', strtotime($query->created_at));
             })
             ->editColumn('updated_at', function ($query) {
                 return date('Y/m/d H:i', strtotime($query->updated_at));
             })
-            ->editColumn('deleted_at', function ($query) {
-                return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
-            })
+            // ->editColumn('deleted_at', function ($query) {
+            //     return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
+            // })
             ->addColumn('action', 'opportunity-state.action')
             ->rawColumns(['action', 'title', 'description']);
     }
@@ -120,17 +120,17 @@ class OpportunityStateDataTable extends DataTable
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
-            ['data' => 'company_name', 'name' => 'company.name', 'title' => 'Customer Name'],
+            ['data' => 'customer_id', 'name' => 'customer_id', 'title' => 'Customer Name'],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
             ['data' => 'opportunity_value', 'name' => 'opportunity_value', 'title' => 'Opportunity Value'],
             ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
-            ['data' => 'created_by', 'name' => 'user.name', 'title' => 'Created By'],
-            ['data' => 'updated_by', 'name' => 'user.name', 'title' => 'Updated By'],
-            ['data' => 'deleted_by', 'name' => 'user.name', 'title' => 'Deleted By'],
+            ['data' => 'created_by', 'name' => 'created_by', 'title' => 'Created By'],
+            ['data' => 'updated_by', 'name' => 'updated_by', 'title' => 'Updated By'],
+            ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
             ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
             ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Updated At'],
-            ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],
+            // ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

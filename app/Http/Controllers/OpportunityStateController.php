@@ -38,10 +38,14 @@ class OpportunityStateController extends Controller
     public function create()
     {
         $customers = Customer::all()->pluck('company_name', 'id');
-
-        return view('opportunity-state.form', compact('customers'));
+        
+        // Ensure $customerPics is an array
+        $customerPics = Customer::all()->mapWithKeys(function ($customer) {
+            return [$customer->id => $customer->company_pic_name];
+        })->toArray(); // Ensure conversion to array
+        return view('opportunity-state.form', compact('customers', 'customerPics'));
     }
-
+    
     public function store(OpportunityStateRequest $request)
     {
         try {
@@ -90,8 +94,11 @@ class OpportunityStateController extends Controller
     {
         $data = OpportunityState::findOrFail($id);
         $customers = Customer::all()->pluck('company_name', 'id');
-
-        return view('opportunity-state.form', compact('data', 'customers', 'id'));
+        $customerPics = Customer::all()->mapWithKeys(function ($customer) {
+            return [$customer->id => $customer->company_pic_name];
+        })->toArray();
+    
+        return view('opportunity-state.form', compact('data', 'customers', 'customerPics', 'id'));
     }
 
     public function update(OpportunityStateRequest $request, $id)

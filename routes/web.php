@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     OpportunityStateController,
     OpportunityStateDetailController,
     UserController,
+    HealthController,
 };
 use App\Http\Controllers\Security\{
     PermissionController,
@@ -55,6 +56,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Opportunity State Module
     Route::resource('opportunity-state', OpportunityStateController::class);
+
+    Route::resource('health', HealthController::class);
+
 
     // Opportunity State Detail Module
     Route::resource('opportunity-state-detail', OpportunityStateDetailController::class)->except(['create', 'edit', 'show']);

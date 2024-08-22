@@ -60,3 +60,22 @@
         $('.select2').select2();
     });
 </script>
+
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+       const customerSelect = document.getElementById('customer');
+       const customerPicInput = document.getElementById('customer_pic');
+       const customerPics = @json($customerPics); // Ensure this is correctly formatted
+
+       customerSelect.addEventListener('change', function () {
+          const selectedCustomerId = this.value;
+          const customerPicName = customerPics[selectedCustomerId] || '';
+          customerPicInput.value = customerPicName;
+       });
+
+       // Trigger event on load if a customer is pre-selected
+       if (customerSelect.value) {
+          customerSelect.dispatchEvent(new Event('change'));
+       }
+    });
+ </script> --}}
