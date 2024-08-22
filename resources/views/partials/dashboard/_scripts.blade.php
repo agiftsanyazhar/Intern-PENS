@@ -61,7 +61,7 @@
     });
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
        const customerSelect = document.getElementById('customer');
        const customerPicInput = document.getElementById('customer_pic');
@@ -78,4 +78,4 @@
           customerSelect.dispatchEvent(new Event('change'));
        }
     });
- </script>
+ </script> --}}

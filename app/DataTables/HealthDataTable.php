@@ -19,9 +19,6 @@ class HealthDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('status_health', function ($query) {
-                return $query->health ? $query->health->status_health : '-';
-            })
             ->editColumn('created_by', function ($query) {
                 return $query->createdByUser ? $query->createdByUser->name : '-';
             })
