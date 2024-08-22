@@ -59,12 +59,12 @@
                      <div class="col-md-10">
                         <p>{{ $opportunityState->updatedByUser->name ?? '' }} <small>{{ $opportunityState->updated_by ? date('Y/m/d H:i', strtotime($opportunityState->updated_at)) : '' }}</small></p>
                      </div>
-                     <div class="col-md-2">
+                     {{-- <div class="col-md-2">
                         <p class="fw-bold">Deleted By:</p>
                      </div>
                      <div class="col-md-10">
                         <p>{{ $opportunityState->deletedByUser->name ?? '' }} <small>{{ $opportunityState->deleted_by ? date('Y/m/d H:i', strtotime($opportunityState->deleted_at)) : '' }}</small></p>
-                     </div>
+                     </div> --}}
                   </div>
                </div>
             </div>

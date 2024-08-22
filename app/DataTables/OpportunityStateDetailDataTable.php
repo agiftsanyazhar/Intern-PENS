@@ -51,9 +51,9 @@ class OpportunityStateDetailDataTable extends DataTable
             ->editColumn('updated_by', function ($query) {
                 return $query->updatedByUser ? $query->updatedByUser->name : '-';
             })
-            ->editColumn('deleted_by', function ($query) {
-                return $query->deletedByUser ? $query->deletedByUser->name : '-';
-            })
+            // ->editColumn('deleted_by', function ($query) {
+            //     return $query->deletedByUser ? $query->deletedByUser->name : '-';
+            // })
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d H:i', strtotime($query->created_at));
             })
@@ -110,12 +110,12 @@ class OpportunityStateDetailDataTable extends DataTable
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
-            ['data' => 'created_by', 'name' => 'user.name', 'title' => 'Created By'],
-            ['data' => 'updated_by', 'name' => 'user.name', 'title' => 'Updated By'],
-            ['data' => 'deleted_by', 'name' => 'user.name', 'title' => 'Deleted By'],
+            ['data' => 'created_by', 'name' => 'created_by', 'title' => 'Created By'],
+            ['data' => 'updated_by', 'name' => 'updated_by', 'title' => 'Updated By'],
+            // ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
             ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
             ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Updated At'],
-            ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],
+            // ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

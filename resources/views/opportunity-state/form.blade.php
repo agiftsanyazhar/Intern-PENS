@@ -39,7 +39,7 @@
 
                        <div class="form-group col-md-6">
                            <label class="form-label" for="customer_pic">Customer PIC<span class="text-danger">*</span></label>
-                           <input type="text" id="customer_pic" name="customer_pic" class="form-control" placeholder="Customer PIC" readonly required value="{{ isset($data) ? $customerPics[$data->customer_id] : '' }}">
+                           <input type="text" id="customer_pic" name="customer_pic" class="form-control" placeholder="Customer PIC" disabled required value="{{ isset($data) ? $customerPics[$data->customer_id] : '' }}">
                        </div>
 
                         <div class="form-group col-md-12">

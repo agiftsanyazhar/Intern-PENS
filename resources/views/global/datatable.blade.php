@@ -53,12 +53,12 @@
                      <div class="col-md-10">
                         <p>{{ $masterDetail->updatedByUser->name ?? '' }} <small>{{ $masterDetail->updated_by ? date('Y/m/d H:i', strtotime($masterDetail->updated_at)) : '' }}</small></p>
                      </div>
-                     <div class="col-md-2">
+                     {{-- <div class="col-md-2">
                         <p class="fw-bold">Deleted By:</p>
                      </div>
                      <div class="col-md-10">
                         <p>{{ $masterDetail->deletedByUser->name ?? '' }} <small>{{ $masterDetail->deleted_by ? date('Y/m/d H:i', strtotime($masterDetail->deleted_at)) : '' }}</small></p>
-                     </div>
+                     </div> --}}
                   </div>
                </div>
             </div>
