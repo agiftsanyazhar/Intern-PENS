@@ -16,4 +16,9 @@ class Health extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
+
+    public function opportunityState(): HasMany
+    {
+        return $this->hasMany(OpportunityState::class);
+    }
 }

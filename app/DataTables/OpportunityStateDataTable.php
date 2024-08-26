@@ -22,6 +22,28 @@ class OpportunityStateDataTable extends DataTable
             ->editColumn('customer_id', function ($query) {
                 return $query->customer ? $query->customer->company_name : '-';
             })
+            ->editColumn('health_id', function ($query) {
+                $statusBadge = 'secondary';
+                switch ($query->health_id) {
+                    case '1':
+                        $statusBadge = 'success';
+                        $statusName = $query->health->status_health;
+                        break;
+                    case '2':
+                        $statusBadge = 'warning';
+                        $statusName = $query->health->status_health;
+                        break;
+                    case '3':
+                        $statusBadge = 'danger';
+                        $statusName = $query->health->status_health;
+                        break;
+                    case '4':
+                        $statusBadge = 'dark';
+                        $statusName = $query->health->status_health;
+                        break;
+                }
+                return '<span class="badge bg-' . $statusBadge . '">' . $statusName . '</span>';
+            })
             ->editColumn('opportunity_status_id', function ($query) {
                 switch ($query->opportunity_status_id) {
                     case 1:
@@ -79,7 +101,7 @@ class OpportunityStateDataTable extends DataTable
             //     return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
             // })
             ->addColumn('action', 'opportunity-state.action')
-            ->rawColumns(['action', 'title', 'description']);
+            ->rawColumns(['action', 'health_id', 'title', 'description']);
     }
 
     /**
@@ -121,6 +143,7 @@ class OpportunityStateDataTable extends DataTable
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'customer_id', 'name' => 'customer_id', 'title' => 'Customer Name'],
+            ['data' => 'health_id', 'name' => 'health_id', 'title' => 'Status Health'],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
             ['data' => 'opportunity_value', 'name' => 'opportunity_value', 'title' => 'Opportunity Value'],
             ['data' => 'title', 'name' => 'title', 'title' => 'Title'],

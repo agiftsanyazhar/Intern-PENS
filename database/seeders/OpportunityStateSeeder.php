@@ -20,6 +20,18 @@ class OpportunityStateSeeder extends Seeder
                 'opportunity_value' => 1000000,
                 'title' => 'Judul 1',
                 'description' => 'Deskripsi 1',
+                'created_at' => '2024-08-01 01:00:00',
+                'updated_at' => '2024-08-01 01:00:00',
+                'created_by' => 2,
+            ],
+            [
+                'customer_id' => 1,
+                'opportunity_status_id' => 1,
+                'opportunity_value' => 1000000,
+                'title' => 'Judul 1',
+                'description' => 'Deskripsi 1',
+                'created_at' => '2024-08-11 01:00:00',
+                'updated_at' => '2024-08-11 01:00:00',
                 'created_by' => 2,
             ],
             [
@@ -28,6 +40,8 @@ class OpportunityStateSeeder extends Seeder
                 'opportunity_value' => 2000000,
                 'title' => 'Judul 2',
                 'description' => 'Deskripsi 2',
+                'created_at' => '2024-08-18 01:00:00',
+                'updated_at' => '2024-08-18 01:00:00',
                 'created_by' => 3,
             ],
             [
@@ -40,8 +54,8 @@ class OpportunityStateSeeder extends Seeder
             ],
         ];
 
-        foreach ($opportunityStates as $item) {
-            OpportunityState::create($item);
+        foreach ($opportunityStates as $opportunityState) {
+            OpportunityState::create($opportunityState);
         }
     }
 }

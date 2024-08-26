@@ -15,10 +15,10 @@
             <div class="card">
                <div class="card-header d-flex justify-content-between">
                   <div class="header-title">
-                        <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Customer Information</h4>
+                     <h4 class="card-title">{{ $id !== null ? 'Update' : 'New' }} Customer Information</h4>
                   </div>
                   <div class="card-action">
-                        <a href="{{ route('customers.index') }}" class="btn btn-sm btn-primary" role="button">Back</a>
+                     <a href="{{ route('customers.index') }}" class="btn btn-sm btn-primary" role="button">Back</a>
                   </div>
                </div>
                <div class="card-body">

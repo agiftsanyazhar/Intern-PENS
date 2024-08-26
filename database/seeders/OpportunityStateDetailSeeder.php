@@ -46,8 +46,8 @@ class OpportunityStateDetailSeeder extends Seeder
             ],
         ];
 
-        foreach ($opportunityStateDetails as $item) {
-            OpportunityStateDetail::create($item);
+        foreach ($opportunityStateDetails as $opportunityStateDetail) {
+            OpportunityStateDetail::create($opportunityStateDetail);
         }
     }
 }

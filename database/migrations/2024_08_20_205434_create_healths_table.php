@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('healths', function (Blueprint $table) {
             $table->id();
             $table->string('status_health');
-            $table->string('level_health');
+            $table->integer('day_parameter_value');
             $table->timestamps();
             $table->softDeletes();
         });

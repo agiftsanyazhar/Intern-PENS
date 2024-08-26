@@ -23,7 +23,8 @@ class HealthController extends Controller
         $assets = ['data-table'];
         $headerAction = '<a href="' . route('health.create') . '" class="btn btn-sm btn-primary" role="button">Add Health</a>';
 
-        return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));    }
+        return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -41,7 +42,7 @@ class HealthController extends Controller
         try {
             $data = $request->only([
                 'status_health',
-                'level_health',
+                'day_parameter_value',
             ]);
 
             Health::create($data);
@@ -53,14 +54,7 @@ class HealthController extends Controller
             return redirect()->back()->withInput()->withErrors($errors);
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
-        }    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Health $health)
-    {
-        //
+        }
     }
 
     /**
@@ -76,13 +70,13 @@ class HealthController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(HealthRequest $request,$id)
+    public function update(HealthRequest $request, $id)
     {
         try {
             $health = Health::findOrFail($id);
             $data = $request->only([
                 'status_health',
-                'level_health',
+                'day_parameter_value',
             ]);
 
             $health->update($data);
@@ -95,7 +89,7 @@ class HealthController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
-    }    
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -125,5 +119,6 @@ class HealthController extends Controller
             return redirect()->back()->withInput()->withErrors($errors);
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
-        }    }
+        }
+    }
 }

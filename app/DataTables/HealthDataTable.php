@@ -19,15 +19,6 @@ class HealthDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('created_by', function ($query) {
-                return $query->createdByUser ? $query->createdByUser->name : '-';
-            })
-            ->editColumn('updated_by', function ($query) {
-                return $query->updatedByUser ? $query->updatedByUser->name : '-';
-            })
-            ->editColumn('deleted_by', function ($query) {
-                return $query->deletedByUser ? $query->deletedByUser->name : '-';
-            })
             ->editColumn('created_at', function ($query) {
                 return date('Y/m/d H:i', strtotime($query->created_at));
             })
@@ -38,7 +29,7 @@ class HealthDataTable extends DataTable
                 return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
             })
             ->addColumn('action', 'health.action')
-            ->rawColumns(['action', 'status_health']);
+            ->rawColumns(['action', 'day_parameter_value']);
     }
 
     /**
@@ -81,7 +72,7 @@ class HealthDataTable extends DataTable
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'status_health', 'name' => 'status_health', 'title' => 'Status Health'],
-            ['data' => 'level_health', 'name' => 'level_health', 'title' => 'Level Health'],
+            ['data' => 'day_parameter_value', 'name' => 'day_parameter_value', 'title' => 'Day Parameter Value'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

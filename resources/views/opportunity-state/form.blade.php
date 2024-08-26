@@ -27,21 +27,19 @@
                         <div class="form-group col-md-6">
                            <label class="form-label" for="customer_id">Customer<span class="text-danger">*</span></label>
                            <select id="customer_id" name="customer_id" class="form-control select2" required>
-                               <option value="">Select Customer</option>
-                               @foreach($customers as $customerId => $company_name)
-                                   <option value="{{ $customerId }}" data-pic="{{ $customerPics[$customerId] }}"
-                                       {{ isset($data) && $data->customer_id == $customerId ? 'selected' : '' }}>
-                                       {{ $company_name }}
-                                   </option>
-                               @endforeach
+                              <option value="">Select Customer</option>
+                              @foreach($customers as $customerId => $company_name)
+                                 <option value="{{ $customerId }}" data-pic="{{ $customerPics[$customerId] }}"
+                                    {{ isset($data) && $data->customer_id == $customerId ? 'selected' : '' }}>
+                                    {{ $company_name }}
+                                 </option>
+                              @endforeach
                            </select>
-                       </div>
-
-                       <div class="form-group col-md-6">
-                           <label class="form-label" for="customer_pic">Customer PIC<span class="text-danger">*</span></label>
-                           <input type="text" id="customer_pic" name="customer_pic" class="form-control" placeholder="Customer PIC" disabled required value="{{ isset($data) ? $customerPics[$data->customer_id] : '' }}">
-                       </div>
-
+                        </div>
+                        <div class="form-group col-md-6">
+                              <label class="form-label" for="customer_pic">Customer PIC</label>
+                              <input type="text" id="customer_pic" name="customer_pic" class="form-control" placeholder="Customer PIC" disabled required value="{{ isset($data) ? $customerPics[$data->customer_id] : '' }}">
+                        </div>
                         <div class="form-group col-md-12">
                            <label class="form-label" for="title">Opportunity Name<span class="text-danger">*</span></label>
                            {{ Form::text('title', old('title'), [
@@ -70,7 +68,7 @@
                               <span class="input-group-text">Rp</span>
                               {{ Form::number('opportunity_value', old('opportunity_value'), [
                                  'class' => 'form-control', 
-                                 'placeholder' => 'Ex: 1200000', 
+                                 'placeholder' => 'Eg: 1200000', 
                                  'required'
                               ]) }}
                            </div>
@@ -96,19 +94,18 @@
    </div>
    
    @push('scripts')
-   <script>
-      $(document).ready(function() {
-          // Ketika dropdown customer berubah
-          $('#customer_id').change(function() {
-              var selectedOption = $(this).find(':selected');
-              var customerPic = selectedOption.data('pic');
+      <script>
+         $(document).ready(function() {
+            // Ketika dropdown customer berubah
+            $('#customer_id').change(function() {
+               var selectedOption = $(this).find(':selected');
+               var customerPic = selectedOption.data('pic');
 
-              // Mengisi field Customer PIC dengan data yang sesuai
-              $('#customer_pic').val(customerPic);
-          });
-      });
-  </script>
+               // Mengisi field Customer PIC dengan data yang sesuai
+               $('#customer_pic').val(customerPic);
+            });
+         });
+   </script>
    @endpush
- 
    
 </x-app-layout>

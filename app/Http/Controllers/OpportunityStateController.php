@@ -10,6 +10,7 @@ use App\Helpers\AuthHelper;
 use App\Http\Requests\OpportunityStateRequest;
 use App\Models\{
     Customer,
+    Health,
     OpportunityState,
 };
 use Carbon\Carbon;
@@ -27,6 +28,27 @@ class OpportunityStateController extends Controller
      */
     public function index(OpportunityStateDataTable $dataTable)
     {
+        $getCurrentDate = Carbon::now();
+
+        $opportunityStates = OpportunityState::all();
+
+        foreach ($opportunityStates as $opportunityState) {
+            // Determine the relevant date to calculate the difference
+            $dateToCompare = $opportunityState->updated_by ? $opportunityState->updated_at : $opportunityState->created_at;
+
+            // Calculate the difference in days
+            $daysDifference = Carbon::parse($dateToCompare)->diffInDays($getCurrentDate);
+
+            // Find the appropriate health based on the day parameter
+            $health = Health::firstWhere('day_parameter_value', '>=', $daysDifference);
+
+            // Update the health_id if a matching health record is found
+            if ($health) {
+                $opportunityState->health_id = $health->id;
+                $opportunityState->save();
+            }
+        }
+
         $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State')]);
         $auth_user = AuthHelper::authSession();
         $assets = ['data-table'];
@@ -38,14 +60,14 @@ class OpportunityStateController extends Controller
     public function create()
     {
         $customers = Customer::all()->pluck('company_name', 'id');
-        
+
         // Ensure $customerPics is an array
         $customerPics = Customer::all()->mapWithKeys(function ($customer) {
             return [$customer->id => $customer->company_pic_name];
         })->toArray(); // Ensure conversion to array
         return view('opportunity-state.form', compact('customers', 'customerPics'));
     }
-    
+
     public function store(OpportunityStateRequest $request)
     {
         try {
@@ -97,7 +119,7 @@ class OpportunityStateController extends Controller
         $customerPics = Customer::all()->mapWithKeys(function ($customer) {
             return [$customer->id => $customer->company_pic_name];
         })->toArray();
-    
+
         return view('opportunity-state.form', compact('data', 'customers', 'customerPics', 'id'));
     }
 

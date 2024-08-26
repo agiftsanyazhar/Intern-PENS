@@ -31,13 +31,13 @@ class HealthRequest extends FormRequest
             case 'post':
                 $rules = [
                     'status_health' => 'required|string|max:255',
-                    'level_health' => 'required|string|max:255',
+                    'day_parameter_value' => 'required|integer',
                 ];
                 break;
             case 'patch':
                 $rules = [
                     'status_health' => 'required|string|max:255',
-                    'level_health' => 'required|string|max:255',
+                    'day_parameter_value' => 'required|integer',
                 ];
                 break;
         }
@@ -48,8 +48,7 @@ class HealthRequest extends FormRequest
     public function messages()
     {
         return [
-            'status_health.max' => 'Company Name is too long.',
-            'level_health.max' => 'Company Address is too long.',
+            'status_health.max' => 'Status Health is too long.',
         ];
     }
 

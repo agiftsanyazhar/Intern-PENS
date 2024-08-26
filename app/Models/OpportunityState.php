@@ -42,4 +42,9 @@ class OpportunityState extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by');
     }
+
+    public function health(): BelongsTo
+    {
+        return $this->belongsTo(Health::class);
+    }
 }
