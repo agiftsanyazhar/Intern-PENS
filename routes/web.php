@@ -36,6 +36,14 @@ Route::get('/storage', function () {
     Artisan::call('storage:link');
 });
 
+Route::get('/start-config', function () {
+    Artisan::call('config:cache');
+    Artisan::call('config:clear');
+    Artisan::call('update:opportunity-health');
+    Artisan::call('queue:work');
+    echo 'start-config completed';
+});
+
 //UI Pages Routs
 Route::get('/',  [HomeController::class, 'signin'])->name('auth.signin');
 
