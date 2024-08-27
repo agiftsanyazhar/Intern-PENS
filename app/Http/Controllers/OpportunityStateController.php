@@ -28,27 +28,6 @@ class OpportunityStateController extends Controller
      */
     public function index(OpportunityStateDataTable $dataTable)
     {
-        $getCurrentDate = Carbon::now();
-
-        $opportunityStates = OpportunityState::all();
-
-        foreach ($opportunityStates as $opportunityState) {
-            // Determine the relevant date to calculate the difference
-            $dateToCompare = $opportunityState->updated_by ? $opportunityState->updated_at : $opportunityState->created_at;
-
-            // Calculate the difference in days
-            $daysDifference = Carbon::parse($dateToCompare)->diffInDays($getCurrentDate);
-
-            // Find the appropriate health based on the day parameter
-            $health = Health::firstWhere('day_parameter_value', '>=', $daysDifference);
-
-            // Update the health_id if a matching health record is found
-            if ($health) {
-                $opportunityState->health_id = $health->id;
-                $opportunityState->save();
-            }
-        }
-
         $pageTitle = trans('global-message.list_form_title', ['form' => trans('Opportunity State')]);
         $auth_user = AuthHelper::authSession();
         $assets = ['data-table'];

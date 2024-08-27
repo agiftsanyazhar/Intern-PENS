@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('refresh:database')->twiceDaily(1, 13)->withoutOverlapping();
+        $schedule->command('update:opportunity-health')->dailyAt('01:00');
     }
 
     /**
@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

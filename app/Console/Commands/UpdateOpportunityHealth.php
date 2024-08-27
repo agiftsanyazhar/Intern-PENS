@@ -1,33 +1,35 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Console\Commands;
 
-use App\Models\{Health, OpportunityState};
-use Carbon\Carbon;
-use Illuminate\Bus\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\{
-    InteractsWithQueue,
-    SerializesModels
+use App\Models\{
+    Health,
+    OpportunityState,
 };
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
-class UpdateOpportunityHealthJob implements ShouldQueue
+class UpdateOpportunityHealth extends Command
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'update:opportunity-health';
 
     /**
-     * Create a new job instance.
+     * The console command description.
+     *
+     * @var string
      */
-    public function __construct()
-    {
-        //
-    }
+    protected $description = 'Update opportunity health';
 
     /**
-     * Execute the job.
+     * Execute the console command.
      */
-    public function handle(): void
+    public function handle()
     {
         $getCurrentDate = Carbon::now();
 
