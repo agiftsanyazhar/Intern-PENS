@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('update:opportunity-health')->dailyAt('01:00');
+        $schedule->command('update:opportunity-health')->dailyAt('01:00')->withoutOverlapping();
     }
 
     /**
