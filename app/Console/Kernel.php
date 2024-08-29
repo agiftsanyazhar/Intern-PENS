@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\UpdateOpportunityHealthJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('update:opportunity-health')->everyfiveseconds()->withoutOverlapping();
+        // $schedule->command('update:opportunity-health')->dailyAt('01:00')->withoutOverlapping();
+        $schedule->job(new UpdateOpportunityHealthJob())->dailyAt('01:00')->withoutOverlapping();
     }
 
     /**
