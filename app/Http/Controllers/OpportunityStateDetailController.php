@@ -39,22 +39,25 @@ class OpportunityStateDetailController extends Controller
                 'created_at',
                 'updated_by'
             ]);
-
+    
             $data['created_by'] = AuthHelper::authSession()->id;
             $data['created_at'] = Carbon::now();
-
+    
             OpportunityStateDetail::create($data);
-
+    
+            // Update OpportunityState dengan status terbaru
+            $this->updateOpportunityStateStatus($data['opportunity_state_id']);
+    
             return redirect()->route('opportunity-state.show', $data['opportunity_state_id'])->withSuccess('Opportunity State Detail Successfully Added');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->messages();
-
+    
             return redirect()->back()->withInput()->withErrors($errors);
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
+    
     public function show($opportunityStateId, $opportunityStateDetailId)
     {
         $data = OpportunityStateDetail::findOrFail($opportunityStateDetailId);
@@ -83,7 +86,7 @@ class OpportunityStateDetailController extends Controller
     {
         try {
             $opportunityStateDetail = OpportunityStateDetail::findOrFail($id);
-
+    
             $data = $request->only([
                 'opportunity_state_id',
                 'opportunity_status_id',
@@ -92,20 +95,23 @@ class OpportunityStateDetailController extends Controller
                 'created_at',
                 'updated_by'
             ]);
-
+    
             $data['updated_by'] = AuthHelper::authSession()->id;
-
+    
             $opportunityStateDetail->update($data);
-
+    
+            // Update OpportunityState dengan status terbaru
+            $this->updateOpportunityStateStatus($data['opportunity_state_id']);
+    
             return redirect()->route('opportunity-state.show', $data['opportunity_state_id'])->withSuccess('Opportunity State Detail Successfully Updated');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->messages();
-
+    
             return redirect()->back()->withInput()->withErrors($errors);
         } catch (Exception $e) {
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
-    }
+        }
 
     /**
      * Remove the specified resource from storage.
@@ -144,4 +150,20 @@ class OpportunityStateDetailController extends Controller
             return redirect()->back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    private function updateOpportunityStateStatus($opportunityStateId)
+{
+    $latestDetail = OpportunityStateDetail::where('opportunity_state_id', $opportunityStateId)
+        ->latest('created_at')
+        ->first();
+
+    if ($latestDetail) {
+        $opportunityState = OpportunityState::find($opportunityStateId);
+        $opportunityState->opportunity_status_id = $latestDetail->opportunity_status_id;
+        $opportunityState->updated_by = AuthHelper::authSession()->id;
+        $opportunityState->save();
+    }
+    
+
+}
 }
