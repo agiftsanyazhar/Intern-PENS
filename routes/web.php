@@ -37,6 +37,25 @@ Route::get('/storage', function () {
     echo 'storage:link completed';
 });
 
+Route::get('/optimize', function () {
+    Artisan::call('optimize:clear'); // This command covers multiple clear operations.
+
+    // Remove the following redundant commands:
+    // Artisan::call('view:clear');    // Covered by optimize:clear
+    // Artisan::call('config:clear');  // Covered by optimize:clear
+    // Artisan::call('route:clear');   // Covered by optimize:clear
+    Artisan::call('cache:clear');   // Optionally, keep if you want to clear the application cache.
+
+    // Keep the following if you want to recompile and cache these items:
+    // Artisan::call('config:cache');
+    // Artisan::call('route:cache');
+    // Artisan::call('view:cache');
+    Artisan::call('dump-autoload');   // Optionally, keep if you want to regenerate the autoload files.
+
+    echo 'optimize completed';
+});
+
+
 Route::get('/start-config', function () {
     Artisan::call('config:cache');
     Artisan::call('config:clear');
