@@ -4,5 +4,5 @@ deployment:
     - export PUBLICPATH=/home/u1575760/public_html/prototype-intern-mitral/
     - export APPPATH=/home/u1575760/prototype-intern-mitral/
 
-    - /bin/cp -R public $PUBLICPATH
-    - /bin/rsync -avz --exclude public/ . $APPPATH
+    - /bin/mv public/* $PUBLICPATH
+    - /bin/mv $(ls -A | grep -v public) $APPPATH
