@@ -37,10 +37,16 @@ Route::get('/storage', function () {
     echo 'storage:link completed';
 });
 
-Route::get('/start-config', function () {
-    Artisan::call('config:cache');
-    Artisan::call('config:clear');
-    echo 'config:[cache, clear] completed';
+Route::get('/migrate', function () {
+    Artisan::call('migrate:fresh');
+    Artisan::call('db:seed');
+    echo 'migrate:fresh, db:seed completed';
+});
+
+Route::get('/optimize', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('cache:clear');
+    echo 'optimize:clear, cache:clear completed';
 });
 
 //UI Pages Routs
