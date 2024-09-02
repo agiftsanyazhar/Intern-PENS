@@ -39,9 +39,8 @@ Route::get('/storage', function () {
 
 Route::get('/optimize', function () {
     Artisan::call('optimize:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    echo 'optimize:clear, config:[clear, cache] completed';
+    Artisan::call('queue:work');
+    echo 'optimize:clear, queue:work completed';
 });
 
 //UI Pages Routs

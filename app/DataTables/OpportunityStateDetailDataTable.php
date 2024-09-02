@@ -46,25 +46,16 @@ class OpportunityStateDetailDataTable extends DataTable
                 return $description;
             })
             ->editColumn('created_by', function ($query) {
-                return $query->createdByUser ? $query->createdByUser->name : '-';
+                return $query->createdByUser ? $query->createdByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($query->created_at)) . '</small>' : '-';
             })
             ->editColumn('updated_by', function ($query) {
-                return $query->updatedByUser ? $query->updatedByUser->name : '-';
+                return $query->updatedByUser ? $query->updatedByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($query->updated_at)) . '</small>' : '-';
             })
             // ->editColumn('deleted_by', function ($query) {
-            //     return $query->deletedByUser ? $query->deletedByUser->name : '-';
-            // })
-            ->editColumn('created_at', function ($query) {
-                return date('Y/m/d H:i', strtotime($query->created_at));
-            })
-            ->editColumn('updated_at', function ($query) {
-                return date('Y/m/d H:i', strtotime($query->updated_at));
-            })
-            // ->editColumn('deleted_at', function ($query) {
-            //     return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
+            //     return $query->deletedByUser ? $query->deletedByUser->name . '<br><small>' . ($query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-') . '</small>' : '-';
             // })
             ->addColumn('action', 'opportunity-state.opportunity-state-detail.action')
-            ->rawColumns(['action', 'description']);
+            ->rawColumns(['action', 'description', 'created_by', 'updated_by', 'deleted_by']);
     }
 
     /**
@@ -113,9 +104,6 @@ class OpportunityStateDetailDataTable extends DataTable
             ['data' => 'created_by', 'name' => 'created_by', 'title' => 'Created By'],
             ['data' => 'updated_by', 'name' => 'updated_by', 'title' => 'Updated By'],
             // ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
-            ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At'],
-            ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Updated At'],
-            // ['data' => 'deleted_at', 'name' => 'deleted_at', 'title' => 'Deleted At'],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

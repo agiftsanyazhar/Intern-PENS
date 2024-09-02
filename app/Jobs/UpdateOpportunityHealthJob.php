@@ -41,10 +41,12 @@ class UpdateOpportunityHealthJob implements ShouldQueue
             $dateToCompare = $opportunityState->updated_by ? $opportunityState->updated_at : $opportunityState->created_at;
 
             // Calculate the difference in days
-            $daysDifference = Carbon::parse($dateToCompare)->diffInDays($getCurrentDate);
+            $daysDifference = $dateToCompare->diffInDays($getCurrentDate);
 
             // Find the appropriate health based on the day parameter
-            $health = Health::firstWhere('day_parameter_value', '>=', $daysDifference);
+            $health = Health::where('day_parameter_value', '<=', $daysDifference)
+                ->orderBy('day_parameter_value', 'desc')
+                ->first();
 
             // Update the health_id if a matching health record is found
             if ($health) {
