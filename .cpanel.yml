@@ -4,5 +4,8 @@ deployment:
     - export PUBLICPATH=/home/u1575760/public_html/prototype-intern-pens/
     - export APPPATH=/home/u1575760/prototype-intern-pens/
 
-    - /bin/cp -R public $PUBLICPATH
+    # Copy the contents of the public directory (not the directory itself)
+    - /bin/cp -R public/* $PUBLICPATH
+
+    # Synchronize the rest of the application excluding the public directory
     - /bin/rsync -avz --exclude public/ . $APPPATH

@@ -37,16 +37,11 @@ Route::get('/storage', function () {
     echo 'storage:link completed';
 });
 
-Route::get('/migrate', function () {
-    Artisan::call('migrate:fresh');
-    Artisan::call('db:seed');
-    echo 'migrate:fresh, db:seed completed';
-});
-
 Route::get('/optimize', function () {
     Artisan::call('optimize:clear');
-    Artisan::call('cache:clear');
-    echo 'optimize:clear, cache:clear completed';
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    echo 'optimize:clear, config:[clear, cache] completed';
 });
 
 //UI Pages Routs
