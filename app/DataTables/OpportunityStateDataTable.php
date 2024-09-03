@@ -117,10 +117,41 @@ class OpportunityStateDataTable extends DataTable
             ->setTableId('dataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+            // ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+            // ->dom('<"row align-items-center"<"col-md-6" B><"col-md-6"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" l><"col-md-6" p>><"clear">')
+            ->dom('<"row align-items-center"<"col-md-6" l><"col-md-6"f>><"row my-3"<"col-md-12"B>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+
+            ->buttons(
+                [
+                    [
+                        'text' => 'Reset',
+                        'className' => 'btn btn-secondary',
+                        'action' => 'function(e, dt, button, config) {
+                            dt.columns(3).search("^((?!4|5).)*$", true, false).draw(); // Show all except Completed and Failed
+                        }'
+                    ],
+                    [
+                        'text' => 'Completed',
+                        'className' => 'btn btn-success',
+                        'action' => 'function(e, dt, button, config) {
+                            dt.columns(3).search("^4$", true, false).draw(); // Show only Completed
+                        }'
+                    ],
+                    [
+                        'text' => 'Failed',
+                        'className' => 'btn btn-danger',
+                        'action' => 'function(e, dt, button, config) {
+                            dt.columns(3).search("^5$", true, false).draw(); // Show only Failed
+                        }'
+                    ],
+                ]
+            )
             ->parameters([
                 "processing" => true,
                 "autoWidth" => false,
+                "initComplete" => 'function() {
+                    this.api().columns(3).search("^((?!4|5).)*$", true, false).draw(); // Hide Completed and Failed on load
+                }',
             ]);
     }
 
