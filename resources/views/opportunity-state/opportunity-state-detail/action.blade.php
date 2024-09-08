@@ -10,7 +10,7 @@
         </span>
     </a>
 
-    <!-- Edit Button -->
+    {{-- <!-- Edit Button -->
     <a class="btn btn-sm btn-icon btn-warning" data-bs-toggle="tooltip" title="Edit Opportunity State Detail" href="{{ route('opportunity-state-detail.edit', ['opportunityStateId' => $opportunity_state_id, 'opportunityStateDetailId' => $id]) }}">
         <span class="btn-inner">
             <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +19,7 @@
                 <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
         </span>
-    </a>
+    </a> --}}
 
     <!-- Delete Button (Visible to Admins) -->
     @if(auth()->user()->hasRole('admin'))

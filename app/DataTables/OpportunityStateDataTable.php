@@ -23,26 +23,7 @@ class OpportunityStateDataTable extends DataTable
                 return $query->customer ? $query->customer->company_name : '-';
             })
             ->editColumn('health_id', function ($query) {
-                $statusBadge = 'secondary';
-                switch ($query->health_id) {
-                    case '1':
-                        $statusBadge = 'success';
-                        $statusName = $query->health->status_health;
-                        break;
-                    case '2':
-                        $statusBadge = 'warning';
-                        $statusName = $query->health->status_health;
-                        break;
-                    case '3':
-                        $statusBadge = 'danger';
-                        $statusName = $query->health->status_health;
-                        break;
-                    case '4':
-                        $statusBadge = 'dark';
-                        $statusName = $query->health->status_health;
-                        break;
-                }
-                return '<span class="badge bg-' . $statusBadge . '">' . $statusName . '</span>';
+                return getOpportunityHealth($query->health_id);
             })
             ->editColumn('opportunity_status_id', function ($query) {
                 switch ($query->opportunity_status_id) {

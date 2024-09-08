@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new UpdateOpportunityHealthJob())->everyFiveSeconds()->withoutOverlapping();
-        // $schedule->job(new UpdateOpportunityHealthJob())->dailyAt('00:10')->withoutOverlapping();
+        // $schedule->job(new UpdateOpportunityHealthJob())->everyFiveSeconds()->withoutOverlapping();
+        $schedule->job(new UpdateOpportunityHealthJob())->daily()->withoutOverlapping();
     }
 
     /**

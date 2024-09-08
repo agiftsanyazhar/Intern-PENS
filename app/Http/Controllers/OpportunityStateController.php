@@ -44,6 +44,7 @@ class OpportunityStateController extends Controller
         $customerPics = Customer::all()->mapWithKeys(function ($customer) {
             return [$customer->id => $customer->company_pic_name];
         })->toArray(); // Ensure conversion to array
+
         return view('opportunity-state.form', compact('customers', 'customerPics'));
     }
 
@@ -52,17 +53,14 @@ class OpportunityStateController extends Controller
         try {
             $data = $request->only([
                 'customer_id',
-                'opportunity_status_id',
                 'opportunity_value',
                 'title',
                 'description',
                 'created_by',
-                'created_at',
                 'updated_by'
             ]);
 
             $data['created_by'] = AuthHelper::authSession()->id;
-            $data['created_at'] = Carbon::now();
 
             OpportunityState::create($data);
 
@@ -86,7 +84,11 @@ class OpportunityStateController extends Controller
         $masterDetail = $opportunityState;
         $backAction = '<a href="' . route('opportunity-state.index') . '" class="btn btn-sm btn-primary" role="button">Back</a>';
 
-        $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>';
+        $headerAction = '';
+
+        if ($opportunityState->opportunity_status_id != 4 && $opportunityState->opportunity_status_id != 5) {
+            $headerAction = '<a href="' . route('opportunity-state-detail.create', $id) . '" class="btn btn-sm btn-primary" role="button">Add Opportunity State Detail</a>';
+        }
 
         return $dataTable->with('id', $id)->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction', 'backAction', 'masterDetail', 'id'));
     }
@@ -109,7 +111,6 @@ class OpportunityStateController extends Controller
 
             $data = $request->only([
                 'customer_id',
-                'opportunity_status_id',
                 'opportunity_value',
                 'title',
                 'description',

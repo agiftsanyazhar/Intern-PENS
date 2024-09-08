@@ -36,12 +36,10 @@ class OpportunityStateDetailController extends Controller
                 'opportunity_status_id',
                 'description',
                 'created_by',
-                'created_at',
                 'updated_by'
             ]);
 
             $data['created_by'] = AuthHelper::authSession()->id;
-            $data['created_at'] = Carbon::now();
 
             OpportunityStateDetail::create($data);
 
@@ -92,11 +90,7 @@ class OpportunityStateDetailController extends Controller
                 'opportunity_status_id',
                 'description',
                 'created_by',
-                'created_at',
-                'updated_by'
             ]);
-
-            $data['updated_by'] = AuthHelper::authSession()->id;
 
             $opportunityStateDetail->update($data);
 
@@ -159,9 +153,12 @@ class OpportunityStateDetailController extends Controller
 
         if ($latestDetail) {
             $opportunityState = OpportunityState::find($opportunityStateId);
+
             $opportunityState->opportunity_status_id = $latestDetail->opportunity_status_id;
             $opportunityState->updated_by = AuthHelper::authSession()->id;
             $opportunityState->save();
+
+            app(NotificationController::class)->store($opportunityStateId, $latestDetail->created_by, AuthHelper::authSession()->id);
         }
     }
 }

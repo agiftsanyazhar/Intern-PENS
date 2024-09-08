@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             OpportunityStateSeeder::class,
             OpportunityStateDetailSeeder::class,
             HealthSeeder::class,
+            NotificationSeeder::class,
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -19,22 +19,26 @@ class UsersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
+            ->editColumn('name', function ($query) {
+                return $query->name .
+                    '<br><small>' . $query->email . '</small>' .
+                    '<br><small>' . $query->phone . '</small>';
+            })
             ->editColumn('role_id', function ($query) {
-                $roleBadge = 'secondary';
                 switch ($query->role_id) {
-                    case '1':
+                    case 1:
                         $roleBadge = 'primary';
                         $roleName = $query->role->title;
                         break;
-                    case '2':
+                    case 2:
                         $roleBadge = 'success';
                         $roleName = $query->role->title;
                         break;
-                    case '3':
+                    case 3:
                         $roleBadge = 'info';
                         $roleName = $query->role->title;
                         break;
-                    case '4':
+                    case 4:
                         $roleBadge = 'gray';
                         $roleName = $query->role->title;
                         break;
@@ -51,7 +55,7 @@ class UsersDataTable extends DataTable
                 return $note;
             })
             ->addColumn('action', 'users.action')
-            ->rawColumns(['action', 'role_id']);
+            ->rawColumns(['action', 'name', 'role_id']);
     }
 
     /**
@@ -94,8 +98,6 @@ class UsersDataTable extends DataTable
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'name', 'name' => 'name', 'title' => 'Name'],
-            ['data' => 'email', 'name' => 'email', 'title' => 'Email'],
-            ['data' => 'phone', 'name' => 'phone', 'title' => 'Phone'],
             ['data' => 'role_id', 'name' => 'role_id', 'title' => 'Role'],
             ['data' => 'note', 'name' => 'note', 'title' => 'Note'],
             Column::computed('action')

@@ -39,7 +39,7 @@ class OpportunityStateDetailSeeder extends Seeder
                 'created_by' => 1
             ],
             [
-                'opportunity_state_id' => 2,
+                'opportunity_state_id' => 3,
                 'opportunity_status_id' => 5,
                 'description' => 'Fifth opportunity state detail data',
                 'created_by' => 1

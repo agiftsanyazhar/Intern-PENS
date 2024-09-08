@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     OpportunityStateDetailController,
     UserController,
     HealthController,
+    NotificationController,
 };
 use App\Http\Controllers\Security\{
     PermissionController,
@@ -39,12 +40,17 @@ Route::get('/storage', function () {
 
 Route::get('/optimize', function () {
     Artisan::call('optimize:clear');
-    Artisan::call('queue:work');
-    echo 'optimize:clear, queue:work completed';
+    echo 'optimize:clear completed';
 });
 
-//UI Pages Routs
+// UI Pages Routs
 Route::get('/',  [HomeController::class, 'signin'])->name('auth.signin');
+
+// Notification
+Route::group(['prefix' => 'notification'], function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('notification.index');
+    Route::put('/{id}', [NotificationController::class, 'markAsRead'])->name('notification.mark-as-read');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     // Permission Module
@@ -71,7 +77,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('opportunity-state-detail', OpportunityStateDetailController::class)->except(['create', 'edit', 'show']);
     Route::group(['prefix' => 'opportunity-state'], function () {
         Route::get('{opportunityStateId}/create', [OpportunityStateDetailController::class, 'create'])->name('opportunity-state-detail.create');
-        Route::get('{opportunityStateId}/edit/{opportunityStateDetailId}', [OpportunityStateDetailController::class, 'edit'])->name('opportunity-state-detail.edit');
+        // Route::get('{opportunityStateId}/edit/{opportunityStateDetailId}', [OpportunityStateDetailController::class, 'edit'])->name('opportunity-state-detail.edit');
         Route::get('{opportunityStateId}/detail/{opportunityStateDetailId}', [OpportunityStateDetailController::class, 'show'])->name('opportunity-state-detail.show');
     });
 });

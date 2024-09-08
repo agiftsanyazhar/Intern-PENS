@@ -59,13 +59,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(OpportunityState::class);
     }
 
-    /**
-     * Get the role that owns the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function receiverNotification(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'receiver_id');
+    }
+
+    public function senderNotification(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'sender_id');
     }
 }
