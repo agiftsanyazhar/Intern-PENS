@@ -2,29 +2,17 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Abstracts\BaseRequest;
 
 
-class UserRequest extends FormRequest
+class UserRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $method = strtolower($this->method());
         $userId = $this->route()->user;
@@ -67,23 +55,5 @@ class UserRequest extends FormRequest
             'password.min' => 'The password must be at least 8 characters.',
             'password.confirmed' => 'The password confirmation does not match.',
         ];
-    }
-
-    /**
-     * @param Validator $validator
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $data = [
-            'status' => true,
-            'message' => $validator->errors()->first(),
-            'all_message' =>  $validator->errors()
-        ];
-
-        if ($this->ajax()) {
-            throw new HttpResponseException(response()->json($data, 422));
-        } else {
-            throw new HttpResponseException(redirect()->back()->withInput()->with('errors', $validator->errors()));
-        }
     }
 }

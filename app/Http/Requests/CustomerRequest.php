@@ -2,20 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Abstracts\BaseRequest;
 
-class CustomerRequest extends FormRequest
+class CustomerRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -75,20 +65,5 @@ class CustomerRequest extends FormRequest
             'company_pic_email.unique' => 'The company PIC email has already been taken.',
             'company_pic_phone.unique' => 'The company PIC phone has already been taken.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $data = [
-            'status' => true,
-            'message' => $validator->errors()->first(),
-            'all_message' =>  $validator->errors()
-        ];
-
-        if ($this->ajax()) {
-            throw new HttpResponseException(response()->json($data, 422));
-        } else {
-            throw new HttpResponseException(redirect()->back()->withInput()->with('errors', $validator->errors()));
-        }
     }
 }

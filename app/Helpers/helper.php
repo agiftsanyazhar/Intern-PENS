@@ -1,4 +1,10 @@
 <?php
+
+use App\Helpers\AuthHelper;
+use App\Models\Health;
+use App\Models\Notification;
+use Spatie\Permission\Models\Role;
+
 function removeSession($session)
 {
     if (\Session::has($session)) {
@@ -100,7 +106,7 @@ function getFileExistsCheck($media)
     return $mediaCondition;
 }
 
-function getOpportunityStatus($statusId)
+function getOpportunityStatus($statusId): string
 {
     switch ($statusId) {
         case 1:
@@ -116,4 +122,42 @@ function getOpportunityStatus($statusId)
         default:
             return '-';
     }
+}
+
+function getOpportunityHealth($healthId): string
+{
+    $health = Health::find($healthId);
+
+    switch ($health->id) {
+        case 1:
+            $statusBadge = 'success';
+            $statusName = $health->status_health;
+            break;
+        case 2:
+            $statusBadge = 'warning';
+            $statusName = $health->status_health;
+            break;
+        case 3:
+            $statusBadge = 'danger';
+            $statusName = $health->status_health;
+            break;
+        case 4:
+            $statusBadge = 'dark';
+            $statusName = $health->status_health;
+            break;
+    }
+    return '<span class="badge bg-' . $statusBadge . '">' . $statusName . '</span>';
+}
+
+function countUnreadNotification(): int
+{
+    return Notification::where(['is_read' => 0, 'receiver_id' => AuthHelper::authSession()->id])->count();
+}
+
+function getNotification()
+{
+    return Notification::where(['is_read' => 0, 'receiver_id' => AuthHelper::authSession()->id])
+        ->orderBy('created_at', 'desc')
+        ->limit(3)
+        ->get();
 }

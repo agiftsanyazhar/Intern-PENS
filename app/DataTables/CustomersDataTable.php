@@ -92,10 +92,7 @@ class CustomersDataTable extends DataTable
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'company_name', 'name' => 'company_name', 'title' => 'Company Name'],
             ['data' => 'company_address', 'name' => 'company_address', 'title' => 'Company Address'],
-            // ['data' => 'company_email', 'name' => 'company_email', 'title' => 'Company Email'],
-            // ['data' => 'company_phone', 'name' => 'company_phone', 'title' => 'Company Phone'],
             ['data' => 'company_pic_name', 'name' => 'company_pic_name', 'title' => 'Company PIC Name'],
-            // ['data' => 'company_pic_phone', 'name' => 'company_pic_phone', 'title' => 'Company PIC Phone'],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
             Column::computed('action')
                 ->exportable(false)

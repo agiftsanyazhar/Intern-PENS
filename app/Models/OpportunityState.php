@@ -47,4 +47,9 @@ class OpportunityState extends Model
     {
         return $this->belongsTo(Health::class);
     }
+
+    public function notification(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

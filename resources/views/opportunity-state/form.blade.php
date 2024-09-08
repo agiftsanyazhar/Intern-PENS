@@ -40,25 +40,11 @@
                               <label class="form-label" for="customer_pic">Customer PIC</label>
                               <input type="text" id="customer_pic" name="customer_pic" class="form-control" placeholder="Customer PIC" disabled required value="{{ isset($data) ? $customerPics[$data->customer_id] : '' }}">
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6">
                            <label class="form-label" for="title">Opportunity Name<span class="text-danger">*</span></label>
                            {{ Form::text('title', old('title'), [
                               'class' => 'form-control', 
                               'placeholder' => 'Enter Opportunity Name', 
-                              'required'
-                           ]) }}
-                        </div>
-                        <div class="form-group col-md-6">
-                           <label class="form-label" for="opportunity_status_id">Opportunity Status<span class="text-danger">*</span></label>
-                           {{ Form::select('opportunity_status_id', [
-                              '1' => 'Inquiry',
-                              '2' => 'Follow Up',
-                              '3' => 'Stale',
-                              '4' => 'Completed',
-                              '5' => 'Failed'
-                           ], old('opportunity_status_id'), [
-                              'class' => 'form-control', 
-                              'placeholder' => 'Select Opportunity Status', 
                               'required'
                            ]) }}
                         </div>
@@ -105,7 +91,7 @@
                $('#customer_pic').val(customerPic);
             });
          });
-   </script>
+      </script>
    @endpush
    
 </x-app-layout>

@@ -2,20 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\Abstracts\BaseRequest;
 
-class HealthRequest extends FormRequest
+class HealthRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +14,6 @@ class HealthRequest extends FormRequest
     public function rules(): array
     {
         $method = strtolower($this->method());
-        $healthId = $this->route()->health;
 
         $rules = [];
         switch ($method) {
@@ -50,20 +39,5 @@ class HealthRequest extends FormRequest
         return [
             'status_health.max' => 'Status Health is too long.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $data = [
-            'status' => true,
-            'message' => $validator->errors()->first(),
-            'all_message' =>  $validator->errors()
-        ];
-
-        if ($this->ajax()) {
-            throw new HttpResponseException(response()->json($data, 422));
-        } else {
-            throw new HttpResponseException(redirect()->back()->withInput()->with('errors', $validator->errors()));
-        }
     }
 }

@@ -85,13 +85,34 @@
                         <div class="form-group col-md-12">
                            <label class="form-label" for="opportunity_status_id">Opportunity Status<span class="text-danger">*</span></label>
                            {{ Form::text('opportunity_state_id', $opportunityStateId, ['class' => 'form-control', 'disabled' => isset($show) ? true : false, 'hidden' => true, 'required']) }}
-                           {{ Form::select('opportunity_status_id', [
-                              '1' => 'Inquiry',
-                              '2' => 'Follow Up',
-                              '3' => 'Stale',
-                              '4' => 'Completed',
-                              '5' => 'Failed'
-                           ], old('opportunity_status_id'), ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'disabled' => isset($show) ? true : false, 'required']) }}
+                           @php
+                              $option = [
+                                 1 => 'Inquiry',
+                                 2 => 'Follow Up',
+                                 3 => 'Stale',
+                                 4 => 'Completed',
+                                 5 => 'Failed'
+                              ];
+
+                              $oldOpportunityStatusId = old('opportunity_status_id', $opportunityState->opportunity_status_id);
+
+                              // Define the statuses that should be hidden based on the current status
+                              $statusHideMapping = [
+                                 1 => [1],
+                                 2 => [1, 2],
+                                 3 => [1, 2, 3],
+                                 4 => [1, 2, 3, 4, 5],
+                                 5 => [1, 2, 3, 4, 5]
+                              ];
+
+                              // Get the statuses to hide based on the current status
+                              $hiddenOpportunityStatus = $statusHideMapping[$oldOpportunityStatusId] ?? [];
+
+                              // Filter out the hidden statuses from the options
+                              $filteredOptions = array_diff_key($option, array_flip($hiddenOpportunityStatus));
+                           @endphp
+
+                           {{ Form::select('opportunity_status_id', $filteredOptions, $oldOpportunityStatusId, ['class' => 'form-control', 'placeholder' => 'Select Opportunity Status', 'disabled' => isset($show) ? true : false, 'required']) }}
                         </div>
                         <div class="form-group col-md-12">
                            <label class="form-label" for="description">Description<span class="text-danger">*</span></label>

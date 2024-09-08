@@ -19,17 +19,11 @@ class HealthDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('created_at', function ($query) {
-                return date('Y/m/d H:i', strtotime($query->created_at));
-            })
-            ->editColumn('updated_at', function ($query) {
-                return date('Y/m/d H:i', strtotime($query->updated_at));
-            })
-            ->editColumn('deleted_at', function ($query) {
-                return $query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-';
+            ->editColumn('status_health', function ($query) {
+                return getOpportunityHealth($query->id);
             })
             ->addColumn('action', 'health.action')
-            ->rawColumns(['action', 'day_parameter_value']);
+            ->rawColumns(['action', 'status_health']);
     }
 
     /**
