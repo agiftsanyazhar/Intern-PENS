@@ -1,7 +1,7 @@
 <!-- Backend Bundle JavaScript -->
 <script src="{{ asset('js/libs.min.js')}}"></script>
 @if(in_array('data-table',$assets ?? []))
-<script src="{{ asset('vendor/datatables/buttons.server-side.js')}}"></script>
+    <script src="{{ asset('vendor/datatables/buttons.server-side.js')}}"></script>
 @endif
 @if(in_array('chart',$assets ?? []))
     <!-- apexchart JavaScript -->
@@ -15,10 +15,6 @@
 <script src="{{asset('vendor/Leaflet/leaflet.js') }} "></script>
 <script src="{{asset('js/charts/vectore-chart.js') }}"></script>
 
-<link rel="stylesheet" href="//cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
-<script src="//cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="//cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap4.min.js"></script>
-
 <!-- fslightbox JavaScript -->
 <script src="{{asset('js/plugins/fslightbox.js')}}"></script>
 <script src="{{asset('js/plugins/slider-tabs.js') }}"></script>
@@ -29,19 +25,19 @@
 
 <script src="{{asset('js/plugins/circle-progress.js') }}"></script>
 @if(in_array('animation',$assets ?? []))
-<!--aos javascript-->
-<script src="{{asset('vendor/aos/dist/aos.js')}}"></script>
+    <!--aos javascript-->
+    <script src="{{asset('vendor/aos/dist/aos.js')}}"></script>
 @endif
 
 @if(in_array('calender',$assets ?? []))
-<!-- Fullcalender Javascript -->
-{{-- {{-- <script src="{{asset('vendor/fullcalendar/core/main.js')}}"></script>
-<script src="{{asset('vendor/fullcalendar/daygrid/main.js')}}"></script>
-<script src="{{asset('vendor/fullcalendar/timegrid/main.js')}}"></script>
-<script src="{{asset('vendor/fullcalendar/list/main.js')}}"></script>
-<script src="{{asset('vendor/fullcalendar/interaction/main.js')}}"></script> --}}
-<script src="{{asset('vendor/moment.min.js')}}"></script>
-<script src="{{asset('js/plugins/calender.js')}}"></script>
+    <!-- Fullcalender Javascript -->
+    {{-- {{-- <script src="{{asset('vendor/fullcalendar/core/main.js')}}"></script>
+    <script src="{{asset('vendor/fullcalendar/daygrid/main.js')}}"></script>
+    <script src="{{asset('vendor/fullcalendar/timegrid/main.js')}}"></script>
+    <script src="{{asset('vendor/fullcalendar/list/main.js')}}"></script>
+    <script src="{{asset('vendor/fullcalendar/interaction/main.js')}}"></script> --}}
+    <script src="{{asset('vendor/moment.min.js')}}"></script>
+    <script src="{{asset('js/plugins/calender.js')}}"></script>
 @endif
 
 <script src="{{ asset('vendor/flatpickr/dist/flatpickr.min.js') }}"></script>
@@ -63,3 +59,4 @@
         $('.select2').select2();
     });
 </script>
+

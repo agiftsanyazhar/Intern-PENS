@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\{
+    NotificationDataTable,
+};
 use App\Helpers\AuthHelper;
 use App\Models\Notification;
 use Exception;
@@ -10,30 +13,14 @@ use Illuminate\Validation\ValidationException;
 
 class NotificationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index(NotificationDataTable $dataTable)
     {
-        $filter = $request->get('filter', 'all'); // Default filter is 'all'
+        $pageTitle = trans('global-message.list_form_title', ['form' => trans('Notification')]);
+        $auth_user = AuthHelper::authSession();
+        $assets = ['data-table'];
+        $headerAction = '';
 
-        $query = Notification::where('receiver_id', AuthHelper::authSession()->id);
-
-        if ($filter === 'read') {
-            $query->where('is_read', true);
-        } elseif ($filter === 'unread') {
-            $query->where('is_read', false);
-        }
-
-        $notifications = $query->orderBy('created_at', 'desc')->get();
-
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('notification.partials.list', compact('notifications'))->render()
-            ]);
-        }
-
-        return view('notification.index', compact('notifications', 'filter'));
+        return $dataTable->render('global.datatable', compact('pageTitle', 'auth_user', 'assets', 'headerAction'));
     }
 
     /**
@@ -62,7 +49,7 @@ class NotificationController extends Controller
         try {
             $notification = Notification::findOrFail($id);
 
-            $notification->read_at = now();
+            $notification->is_read = 1;
             $notification->save();
 
             return redirect()->to(route('opportunity-state.show', $notification->opportunity_state_id));

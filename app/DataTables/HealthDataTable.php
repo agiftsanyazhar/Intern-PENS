@@ -19,8 +19,8 @@ class HealthDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('status_health', function ($query) {
-                return getOpportunityHealth($query->id);
+            ->editColumn('status_health', function ($health) {
+                return getOpportunityHealthBadge($health->id);
             })
             ->addColumn('action', 'health.action')
             ->rawColumns(['action', 'status_health']);
@@ -29,13 +29,12 @@ class HealthDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Health $model
+     * @param \App\Models\Health $healthModel
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query()
+    public function query(Health $health)
     {
-        $model = Health::query();
-        return $this->applyScopes($model);
+        return $this->applyScopes($health->newQuery());
     }
 
     /**

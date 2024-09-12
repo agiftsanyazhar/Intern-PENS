@@ -13,49 +13,21 @@ class OpportunityStateSeeder extends Seeder
      */
     public function run(): void
     {
-        $opportunityStates = [
-            [
-                'customer_id' => 1,
-                'opportunity_status_id' => 3,
-                'opportunity_value' => 1000000,
-                'title' => 'Judul 1',
-                'description' => 'Deskripsi 1',
-                'created_at' => '2024-08-01 01:00:00',
-                'updated_at' => '2024-08-01 01:00:00',
-                'created_by' => 2,
-            ],
-            [
-                'customer_id' => 1,
-                'opportunity_status_id' => 4,
-                'opportunity_value' => 1000000,
-                'title' => 'Judul 1',
-                'description' => 'Deskripsi 1',
-                'created_at' => '2024-08-11 01:00:00',
-                'updated_at' => '2024-08-11 01:00:00',
-                'created_by' => 2,
-            ],
-            [
-                'customer_id' => 2,
-                'opportunity_status_id' => 5,
-                'opportunity_value' => 2000000,
-                'title' => 'Judul 2',
-                'description' => 'Deskripsi 2',
-                'created_at' => '2024-08-18 01:00:00',
-                'updated_at' => '2024-08-18 01:00:00',
-                'created_by' => 3,
-            ],
-            [
-                'customer_id' => 3,
-                'opportunity_status_id' => 1,
-                'opportunity_value' => 3000000,
-                'title' => 'Judul 3',
-                'description' => 'Deskripsi 3',
-                'created_by' => 2,
-            ],
-        ];
+        $opportunityStates = [];
+        for ($i = 0; $i < 2000; $i++) {
+            $opportunityStates[] = [
+                'customer_id' => rand(1, 1000),
+                'opportunity_status_id' => rand(1, 5),
+                'opportunity_value' => rand(1000000, 50000000),
+                'title' => 'Judul ' . $i,
+                'description' => 'Deskripsi ' . $i,
+                'created_at' => fake()->date(),
+                'created_by' => rand(1, 504),
+            ];
+        }
 
         foreach ($opportunityStates as $opportunityState) {
-            OpportunityState::create($opportunityState);
+            OpportunityState::insert($opportunityState);
         }
     }
 }

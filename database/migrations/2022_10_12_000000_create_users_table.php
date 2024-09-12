@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
                 ->constrained('roles')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            // $table->string('role')->default('sales');
             $table->string('password');
             $table->string('note')->nullable();
             $table->rememberToken();

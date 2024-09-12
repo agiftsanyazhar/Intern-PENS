@@ -19,34 +19,24 @@ class UsersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('name', function ($query) {
-                return $query->name .
-                    '<br><small>' . $query->email . '</small>' .
-                    '<br><small>' . $query->phone . '</small>';
+            ->editColumn('name', function ($user) {
+                return $user->name .
+                    '<br><small>' . $user->email . '</small>' .
+                    '<br><small>' . $user->phone . '</small>';
             })
-            ->editColumn('role_id', function ($query) {
-                switch ($query->role_id) {
-                    case 1:
-                        $roleBadge = 'primary';
-                        $roleName = $query->role->title;
-                        break;
-                    case 2:
-                        $roleBadge = 'success';
-                        $roleName = $query->role->title;
-                        break;
-                    case 3:
-                        $roleBadge = 'info';
-                        $roleName = $query->role->title;
-                        break;
-                    case 4:
-                        $roleBadge = 'gray';
-                        $roleName = $query->role->title;
-                        break;
-                }
-                return '<span class="badge bg-' . $roleBadge . '">' . $roleName . '</span>';
+            ->editColumn('role_id', function ($user) {
+                $role = $user->role->title;
+                $roleBadge = match ($role) {
+                    'Admin' => 'primary',
+                    'Division Head' => 'success',
+                    'Sales Head' => 'info',
+                    'Sales' => 'gray',
+                };
+
+                return '<span class="badge bg-' . $roleBadge . '">' . $role . '</span>';
             })
-            ->editColumn('note', function ($query) {
-                $note = $query->note ?? '-';
+            ->editColumn('note', function ($user) {
+                $note = $user->note ?? '-';
                 if (strlen($note) > 25) {
                     $tooltipNote = $note;
                     $note = substr($note, 0, 25) . '...';
@@ -55,19 +45,12 @@ class UsersDataTable extends DataTable
                 return $note;
             })
             ->addColumn('action', 'users.action')
-            ->rawColumns(['action', 'name', 'role_id']);
+            ->rawColumns(['action', 'name', 'role_id', 'note']);
     }
 
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\User $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query()
+    public function query(User $user)
     {
-        $model = User::query();
-        return $this->applyScopes($model);
+        return $this->applyScopes($user->newQuery());
     }
 
     /**
@@ -93,11 +76,12 @@ class UsersDataTable extends DataTable
      *
      * @return array
      */
-    protected function getColumns()
+    protected function getColumns(): array
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'name', 'name' => 'name', 'title' => 'Name'],
+            ['data' => 'email', 'name' => 'email', 'title' => 'Email', 'visible' => false],
             ['data' => 'role_id', 'name' => 'role_id', 'title' => 'Role'],
             ['data' => 'note', 'name' => 'note', 'title' => 'Note'],
             Column::computed('action')

@@ -51,7 +51,7 @@
                     <div class="d-flex align-items-center">
                       <div class="w-100">
                         <div class="d-flex justify-content-between align-items-center">
-                          <h6 class="fw-bold mb-0">{{ Str::limit($item->opportunityState->title, 15) }}</h6>
+                          <h6>{{ Str::limit($item->opportunityState->title, 15) }}</h6>
                           <small class="float-right">
                             @if ($item->created_at->format('Y-m-d') == now()->format('Y-m-d'))
                               {{ $item->created_at->format('H:i') }}
@@ -171,7 +171,7 @@
           <img src="{{asset('images/avatars/01.png')}}" alt="User-Profile" class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded">
             <div class="caption ms-3 d-none d-md-block ">
               <h6 class="mb-0 caption-title">{{ auth()->user()->name ?? 'Austin Robertson'  }}</h6>
-              <p class="mb-0 caption-sub-title text-capitalize">{{ str_replace('_',' ',auth()->user()->role->name) ?? 'Marketing Administrator' }}</p>
+              <p class="mb-0 caption-sub-title text-capitalize">{{ str_replace('_',' ',auth()->user()->role->title) ?? 'Marketing Administrator' }}</p>
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

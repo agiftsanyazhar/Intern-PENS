@@ -19,25 +19,11 @@ class OpportunityStateDetailDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('opportunity_status_id', function ($query) {
-                switch ($query->opportunity_status_id) {
-                    case 1:
-                        return 'Inquiry';
-                    case 2:
-                        return 'Follow Up';
-                    case 3:
-                        return 'Stale';
-                    case 4:
-                        return 'Completed';
-                    case 5:
-                        return 'Failed';
-                    default:
-                        return '-';
-                }
-                return $query->opportunity_status_id ? $query->customer->company_name : '-';
+            ->editColumn('opportunity_status_id', function ($opportunityStateDetail) {
+                return getOpportunityStatus($opportunityStateDetail->opportunity_status_id);
             })
-            ->editColumn('description', function ($query) {
-                $description = $query->description;
+            ->editColumn('description', function ($opportunityStateDetail) {
+                $description = $opportunityStateDetail->description ?? '-';
                 if (strlen($description) > 25) {
                     $tooltipDescription = $description;
                     $description = substr($description, 0, 25) . '...';
@@ -45,31 +31,24 @@ class OpportunityStateDetailDataTable extends DataTable
                 }
                 return $description;
             })
-            ->editColumn('created_by', function ($query) {
-                return $query->createdByUser ? $query->createdByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($query->created_at)) . '</small>' : '-';
-            })
-            ->editColumn('updated_by', function ($query) {
-                return $query->updatedByUser ? $query->updatedByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($query->updated_at)) . '</small>' : '-';
-            })
-            // ->editColumn('deleted_by', function ($query) {
-            //     return $query->deletedByUser ? $query->deletedByUser->name . '<br><small>' . ($query->deleted_at ? date('Y/m/d H:i', strtotime($query->deleted_at)) : '-') . '</small>' : '-';
-            // })
+            ->editColumn('created_by', fn($opportunityStateDetail) => $opportunityStateDetail->createdByUser ? $opportunityStateDetail->createdByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($opportunityStateDetail->created_at)) . '</small>' : '-')
             ->addColumn('action', 'opportunity-state.opportunity-state-detail.action')
-            ->rawColumns(['action', 'description', 'created_by', 'updated_by', 'deleted_by']);
+            ->rawColumns(['action', 'description', 'created_by']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\OpportunityState $model
+     * @param \App\Models\OpportunityStateDetail $opportunityStateDetail
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(OpportunityStateDetail $model)
+    public function query(OpportunityStateDetail $opportunityStateDetail)
     {
-        // Assuming you have access to the $opportunityState object or its ID
-        $opportunityStateId = $this->id;  // Pass the id when calling the DataTable class
-
-        return $model->newQuery()->where('opportunity_state_id', $opportunityStateId);
+        return $this->applyScopes(
+            $opportunityStateDetail->newQuery()
+                ->with('createdByUser')
+                ->where('opportunity_state_id', $this->id)
+        );
     }
 
     /**
@@ -101,9 +80,8 @@ class OpportunityStateDetailDataTable extends DataTable
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
-            ['data' => 'created_by', 'name' => 'created_by', 'title' => 'Created By'],
-            ['data' => 'updated_by', 'name' => 'updated_by', 'title' => 'Updated By'],
-            // ['data' => 'deleted_by', 'name' => 'deleted_by', 'title' => 'Deleted By'],
+            ['data' => 'created_by', 'name' => 'createdByUser.name', 'title' => 'Created By'],
+            ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Created At', 'visible' => false],
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
