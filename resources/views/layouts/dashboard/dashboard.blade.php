@@ -1,6 +1,7 @@
 @props(['dir'])
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $dir ? 'rtl' : 'ltr' }}">
+
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if($dir) dir="rtl" @endif>
 
 <head>
     <meta charset="utf-8">
@@ -12,8 +13,9 @@
     @include('partials.dashboard._head')
 </head>
 
-<body class="">
+<body>
     @include('partials.dashboard._body')
 </body>
 
 </html>
+

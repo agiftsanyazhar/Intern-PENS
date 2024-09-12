@@ -34,25 +34,21 @@ class UpdateOpportunityHealthJob implements ShouldQueue
     {
         $getCurrentDate = Carbon::now();
 
-        $opportunityStates = OpportunityState::all();
+        OpportunityState::chunk(100, function ($opportunityStates) use ($getCurrentDate) {
+            foreach ($opportunityStates as $opportunityState) {
+                $dateToCompare = $opportunityState->updated_by ? $opportunityState->updated_at : $opportunityState->created_at;
 
-        foreach ($opportunityStates as $opportunityState) {
-            // Determine the relevant date to calculate the difference
-            $dateToCompare = $opportunityState->updated_by ? $opportunityState->updated_at : $opportunityState->created_at;
+                $daysDifference = $dateToCompare->diffInDays($getCurrentDate);
 
-            // Calculate the difference in days
-            $daysDifference = $dateToCompare->diffInDays($getCurrentDate);
+                $health = Health::where('day_parameter_value', '<=', $daysDifference)
+                    ->orderBy('day_parameter_value', 'desc')
+                    ->first();
 
-            // Find the appropriate health based on the day parameter
-            $health = Health::where('day_parameter_value', '<=', $daysDifference)
-                ->orderBy('day_parameter_value', 'desc')
-                ->first();
-
-            // Update the health_id if a matching health record is found
-            if ($health) {
-                $opportunityState->health_id = $health->id;
-                $opportunityState->save();
+                if ($health) {
+                    $opportunityState->health_id = $health->id;
+                    $opportunityState->save();
+                }
             }
-        }
+        });
     }
 }

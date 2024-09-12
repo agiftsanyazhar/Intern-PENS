@@ -10,7 +10,6 @@ use App\Helpers\AuthHelper;
 use App\Http\Requests\OpportunityStateRequest;
 use App\Models\{
     Customer,
-    Health,
     OpportunityState,
 };
 use Carbon\Carbon;

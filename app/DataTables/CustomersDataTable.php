@@ -19,18 +19,18 @@ class CustomersDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->editColumn('company_name', function ($query) {
-                return $query->company_name .
-                    '<br><small>' . $query->company_email . '</small>' .
-                    '<br><small>' . $query->company_phone . '</small>';
+            ->editColumn('company_name', function ($customer) {
+                return $customer->company_name .
+                    '<br><small>' . $customer->company_email . '</small>' .
+                    '<br><small>' . $customer->company_phone . '</small>';
             })
-            ->editColumn('company_pic_name', function ($query) {
-                return $query->company_pic_name .
-                    '<br><small>' . $query->company_pic_email . '</small>' .
-                    '<br><small>' . $query->company_pic_phone . '</small>';
+            ->editColumn('company_pic_name', function ($customer) {
+                return $customer->company_pic_name .
+                    '<br><small>' . $customer->company_pic_email . '</small>' .
+                    '<br><small>' . $customer->company_pic_phone . '</small>';
             })
-            ->editColumn('company_address', function ($query) {
-                $companyAddress = $query->company_address;
+            ->editColumn('company_address', function ($customer) {
+                $companyAddress = $customer->company_address;
                 if (strlen($companyAddress) > 25) {
                     $tooltipCompanyAddress = $companyAddress;
                     $companyAddress = substr($companyAddress, 0, 25) . '...';
@@ -38,8 +38,8 @@ class CustomersDataTable extends DataTable
                 }
                 return $companyAddress;
             })
-            ->editColumn('description', function ($query) {
-                $description = $query->description ?? '-';
+            ->editColumn('description', function ($customer) {
+                $description = $customer->description ?? '-';
                 if (strlen($description) > 25) {
                     $tooltipDescription = $description;
                     $description = substr($description, 0, 25) . '...';
@@ -48,19 +48,18 @@ class CustomersDataTable extends DataTable
                 return $description;
             })
             ->addColumn('action', 'customers.action')
-            ->rawColumns(['action', 'company_address', 'description', 'company_name', 'company_pic_name']);
+            ->rawColumns(['action', 'company_name', 'company_pic_name', 'company_address', 'description',]);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Customer $model
+     * @param \App\Models\Customer $customerModel
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query()
+    public function query(Customer $customer)
     {
-        $model = Customer::query();
-        return $this->applyScopes($model);
+        return $this->applyScopes($customer->newQuery());
     }
 
     /**
@@ -91,8 +90,12 @@ class CustomersDataTable extends DataTable
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'company_name', 'name' => 'company_name', 'title' => 'Company Name'],
+            ['data' => 'company_email', 'name' => 'company_email', 'title' => 'Company Email', 'visible' => false],
+            ['data' => 'company_phone', 'name' => 'company_phone', 'title' => 'Company Phone', 'visible' => false],
             ['data' => 'company_address', 'name' => 'company_address', 'title' => 'Company Address'],
             ['data' => 'company_pic_name', 'name' => 'company_pic_name', 'title' => 'Company PIC Name'],
+            ['data' => 'company_pic_email', 'name' => 'company_pic_email', 'title' => 'Company PIC Email', 'visible' => false],
+            ['data' => 'company_pic_phone', 'name' => 'company_pic_phone', 'title' => 'Company PIC Phone', 'visible' => false],
             ['data' => 'description', 'name' => 'description', 'title' => 'Description'],
             Column::computed('action')
                 ->exportable(false)

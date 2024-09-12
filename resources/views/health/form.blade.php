@@ -26,7 +26,7 @@
                      <div class="row">
                         <div class="form-group col-md-12">
                            <label class="form-label" for="status_health">Status Health<span class="text-danger">*</span></label>
-                           {{ Form::text('status_health', old('status_health'), ['class' => 'form-control', 'placeholder' => 'Enter Status', 'required']) }}
+                           {{ Form::text('status_health', old('status_health'), ['class' => 'form-control', 'placeholder' => 'Enter Status', 'required', 'disabled' => isset($id)]) }}
                         </div>
                         <div class="form-group col-md-12">
                            <label class="form-label" for="day_parameter_value">Day Parameter Value<span class="text-danger">*</span></label>

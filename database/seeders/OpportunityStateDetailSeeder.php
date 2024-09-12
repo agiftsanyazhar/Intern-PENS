@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\OpportunityStateDetail;
+use App\Models\{OpportunityState, OpportunityStateDetail};
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,41 +13,26 @@ class OpportunityStateDetailSeeder extends Seeder
      */
     public function run(): void
     {
-        $opportunityStateDetails = [
-            [
-                'opportunity_state_id' => 1,
-                'opportunity_status_id' => 1,
-                'description' => 'First opportunity state detail data',
-                'created_by' => 1
-            ],
-            [
-                'opportunity_state_id' => 1,
-                'opportunity_status_id' => 2,
-                'description' => 'Second opportunity state detail data',
-                'created_by' => 1
-            ],
-            [
-                'opportunity_state_id' => 1,
-                'opportunity_status_id' => 3,
-                'description' => 'Third opportunity state detail data',
-                'created_by' => 1
-            ],
-            [
-                'opportunity_state_id' => 2,
-                'opportunity_status_id' => 4,
-                'description' => 'Fourth opportunity state detail data',
-                'created_by' => 1
-            ],
-            [
-                'opportunity_state_id' => 3,
-                'opportunity_status_id' => 5,
-                'description' => 'Fifth opportunity state detail data',
-                'created_by' => 1
-            ],
-        ];
+        $opportunityStateDetails = [];
+        for ($i = 0; $i < 2500; $i++) {
+            $opportunityStateDetails[] = [
+                'opportunity_state_id' => rand(1, 1200),
+                'opportunity_status_id' => rand(1, 5),
+                'description' => 'Opportunity state detail data ' . $i,
+                'created_by' => rand(1, 504),
+                'created_at' => fake()->date(),
+            ];
+        }
 
         foreach ($opportunityStateDetails as $opportunityStateDetail) {
-            OpportunityStateDetail::create($opportunityStateDetail);
+            $opportunityStateDetailModel = OpportunityStateDetail::create($opportunityStateDetail);
+
+            $opportunityState = OpportunityState::find($opportunityStateDetailModel->opportunity_state_id);
+            $opportunityState->update([
+                'opportunity_status_id' => $opportunityStateDetailModel->opportunity_status_id,
+                'updated_by' => $opportunityStateDetailModel->created_by,
+                'updated_at' => $opportunityStateDetailModel->created_at,
+            ]);
         }
     }
 }

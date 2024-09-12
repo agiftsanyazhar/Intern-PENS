@@ -108,56 +108,45 @@ function getFileExistsCheck($media)
 
 function getOpportunityStatus($statusId): string
 {
-    switch ($statusId) {
-        case 1:
-            return 'Inquiry';
-        case 2:
-            return 'Follow Up';
-        case 3:
-            return 'Stale';
-        case 4:
-            return 'Completed';
-        case 5:
-            return 'Failed';
-        default:
-            return '-';
-    }
+    return match ($statusId) {
+        1 => 'Inquiry',
+        2 => 'Follow Up',
+        3 => 'Stale',
+        4 => 'Completed',
+        5 => 'Failed',
+        default => '-',
+    };
 }
 
-function getOpportunityHealth($healthId): string
+function getOpportunityHealthBadge(int $healthId): string
 {
-    $health = Health::find($healthId);
+    $health = Health::findOrFail($healthId);
 
-    switch ($health->id) {
-        case 1:
-            $statusBadge = 'success';
-            $statusName = $health->status_health;
-            break;
-        case 2:
-            $statusBadge = 'warning';
-            $statusName = $health->status_health;
-            break;
-        case 3:
-            $statusBadge = 'danger';
-            $statusName = $health->status_health;
-            break;
-        case 4:
-            $statusBadge = 'dark';
-            $statusName = $health->status_health;
-            break;
-    }
-    return '<span class="badge bg-' . $statusBadge . '">' . $statusName . '</span>';
+    $statuses = [
+        1 => ['badge' => 'success', 'name' => $health->status_health],
+        2 => ['badge' => 'warning', 'name' => $health->status_health],
+        3 => ['badge' => 'danger', 'name' => $health->status_health],
+        4 => ['badge' => 'dark', 'name' => $health->status_health],
+    ];
+
+    $status = $statuses[$healthId] ?? ['badge' => 'secondary', 'name' => '-'];
+
+    return '<span class="badge bg-' . $status['badge'] . '">' . $status['name'] . '</span>';
 }
 
 function countUnreadNotification(): int
 {
-    return Notification::where(['is_read' => 0, 'receiver_id' => AuthHelper::authSession()->id])->count();
+    return Notification::where([
+        'is_read' => 0,
+        'receiver_id' => AuthHelper::authSession()->id,
+    ])->count();
 }
 
 function getNotification()
 {
-    return Notification::where(['is_read' => 0, 'receiver_id' => AuthHelper::authSession()->id])
-        ->orderBy('created_at', 'desc')
-        ->limit(3)
+    return Notification::where('receiver_id', AuthHelper::authSession()->id)
+        ->where('is_read', 0)
+        ->latest()
+        ->take(3)
         ->get();
 }

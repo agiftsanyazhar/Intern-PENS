@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Notification;
+use App\Models\{Notification, OpportunityStateDetail};
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,29 +13,17 @@ class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        $notifications = [
-            [
-                'opportunity_state_id' => 1,
-                'receiver_id' => 2,
-                'sender_id' => 1,
-                'created_at' => '2024-09-05 00:05:00',
-            ],
-            [
-                'opportunity_state_id' => 2,
-                'receiver_id' => 2,
-                'sender_id' => 2,
-                'created_at' => '2024-09-05 00:06:00',
-            ],
-            [
-                'opportunity_state_id' => 4,
-                'receiver_id' => 2,
-                'sender_id' => 3,
-                'created_at' => '2024-09-05 00:07:00',
-            ],
-        ];
+        $opportunityStateDetails = OpportunityStateDetail::all();
 
-        foreach ($notifications as $notification) {
-            Notification::create($notification);
+        foreach ($opportunityStateDetails as $opportunityStateDetail) {
+            $notification = [
+                'opportunity_state_id' => $opportunityStateDetail->opportunity_state_id,
+                'receiver_id' => $opportunityStateDetail->opportunityState->created_by,
+                'sender_id' => $opportunityStateDetail->created_by,
+                'created_at' => $opportunityStateDetail->created_at,
+            ];
+
+            Notification::insert($notification);
         }
     }
 }
