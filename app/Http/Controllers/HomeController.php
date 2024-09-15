@@ -3,6 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\OpportunityState;
+use App\DataTables\{
+    OpportunityStateDataTable,
+    OpportunityStateDetailDataTable
+};
+use Illuminate\Support\Facades\DB;
+
 
 class HomeController extends Controller
 {
@@ -11,8 +19,41 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $assets = ['chart', 'animation'];
-        return view('dashboards.dashboard', compact('assets'));
+    $opportunity = DB::table('opportunity_states')->where('DELETED_AT',null)->get();
+        // Fetching total customers
+    $totalCustomers = Customer::count();
+
+    // Fetching total opportunities
+    $totalOpportunities = OpportunityState::count();
+
+    // Fetching opportunities by status
+    $opportunityGood = OpportunityState::where('health_id', '1')->count();
+    $opportunityFair = OpportunityState::where('health_id', '2')->count();
+    $opportunityPoor = OpportunityState::where('health_id', '3')->count();
+    $opportunityCritical = OpportunityState::where('health_id', '4')->count();
+    $opportunityCompleted = OpportunityState::where('opportunity_status_id', '4')->count();
+    $opportunityFailed = OpportunityState::where('opportunity_status_id', '5')->count();
+
+    $opportunityValue = OpportunityState::sum('opportunity_value'); // Adjust 'value' to your actual column name
+
+
+    $assets = ['chart', 'animation'];
+
+    // Pass the data to the view
+    return view('dashboards.dashboard',['opportunity'=>$opportunity], compact(
+        'assets', 
+        'totalCustomers', 
+        'totalOpportunities', 
+        'opportunityGood', 
+        'opportunityFair', 
+        'opportunityPoor', 
+        'opportunityCritical', 
+        'opportunityCompleted', 
+        'opportunityFailed',
+        'opportunityValue' // Add the opportunity value to the view
+
+    ));
+    
     }
 
     /*
