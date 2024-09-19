@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
         }
 
         $users = [];
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $name = ['Division Head ', 'Sales Head ', 'Sales '][rand(0, 2)] . $i;
             $email = match (true) {
                 str_contains($name, 'Division Head') => 'division-head' . $i . '@gmail.com',

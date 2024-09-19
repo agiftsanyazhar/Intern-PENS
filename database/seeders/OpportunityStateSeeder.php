@@ -14,15 +14,15 @@ class OpportunityStateSeeder extends Seeder
     public function run(): void
     {
         $opportunityStates = [];
-        for ($i = 0; $i < 2000; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $opportunityStates[] = [
-                'customer_id' => rand(1, 1000),
+                'customer_id' => rand(1, 10000),
                 'opportunity_status_id' => rand(1, 5),
                 'opportunity_value' => rand(1000000, 50000000),
                 'title' => 'Judul ' . $i,
                 'description' => 'Deskripsi ' . $i,
-                'created_at' => fake()->date(),
-                'created_by' => rand(1, 504),
+                'created_at' => fake()->dateTimeBetween('-5 years', 'now'),
+                'created_by' => rand(1, 1004),
             ];
         }
 

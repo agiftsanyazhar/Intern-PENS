@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\OpportunityState;
+use App\Models\User;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 
@@ -60,10 +61,7 @@ class OpportunityStateDataTable extends DataTable
             ->setTableId('dataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            // ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
-            // ->dom('<"row align-items-center"<"col-md-6" B><"col-md-6"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" l><"col-md-6" p>><"clear">')
             ->dom('<"row align-items-center"<"col-md-6" l><"col-md-6"f>><"row my-3"<"col-md-12"B>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
-
             ->buttons(
                 [
                     [
@@ -87,6 +85,12 @@ class OpportunityStateDataTable extends DataTable
                             dt.columns(3).search("^5$", true, false).draw(); // Show only Failed
                         }'
                     ],
+                    // [
+                    //     'extend' => 'collection',
+                    //     'text' => 'Created By',
+                    //     'className' => 'btn btn-info dropdown-toggle',
+                    //     'buttons' => $this->getCreatedByDropdownOptions() // Fetch dropdown options here
+                    // ]
                 ]
             )
             ->parameters([
@@ -108,7 +112,7 @@ class OpportunityStateDataTable extends DataTable
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
             ['data' => 'customer_id', 'name' => 'customer.company_name', 'title' => 'Customer Name'],
-            ['data' => 'health_id', 'name' => 'health.status_health', 'title' => 'Status Health'],
+            ['data' => 'health_id', 'name' => 'health.status_health', 'title' => 'Health Status'],
             ['data' => 'opportunity_status_id', 'name' => 'opportunity_status_id', 'title' => 'Opportunity Status'],
             ['data' => 'opportunity_value', 'name' => 'opportunity_value', 'title' => 'Opportunity Value'],
             ['data' => 'title', 'name' => 'title', 'title' => 'Title'],
@@ -124,5 +128,33 @@ class OpportunityStateDataTable extends DataTable
                 ->width(60)
                 ->addClass('text-center hide-search'),
         ];
+    }
+
+    protected function getCreatedByDropdownOptions()
+    {
+        $createdByUsers = User::select('id', 'name')->get();
+
+        $dropdownOptions = [];
+
+        $dropdownOptions[] = [
+            'text' => 'All',
+            'action' => 'function(e, dt, button, config) {
+            dt.columns(7).search("").draw();
+        }'
+        ];
+
+        foreach ($createdByUsers as $user) {
+            $dropdownOptions[] = [
+                'text' => $user->name,
+                'action' => 'function(e, dt, button, config) {
+                dt.columns(7).search("' . $user->name . '").draw();
+            }'
+            ];
+        }
+
+        // Debugging output
+        // dd($dropdownOptions); // You can replace this with Log::info($dropdownOptions); to view in the logs
+
+        return $dropdownOptions;
     }
 }

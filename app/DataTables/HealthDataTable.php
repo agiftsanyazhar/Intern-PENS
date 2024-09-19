@@ -48,7 +48,7 @@ class HealthDataTable extends DataTable
             ->setTableId('dataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+            ->dom('<"row align-items-center"<"col-md-6" l><"col-md-6"f>><"row my-3"<"col-md-12"B>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
             ->parameters([
                 "processing" => true,
                 "autoWidth" => false,
@@ -64,7 +64,7 @@ class HealthDataTable extends DataTable
     {
         return [
             ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false],
-            ['data' => 'status_health', 'name' => 'status_health', 'title' => 'Status Health'],
+            ['data' => 'status_health', 'name' => 'status_health', 'title' => 'Health Status'],
             ['data' => 'day_parameter_value', 'name' => 'day_parameter_value', 'title' => 'Day Parameter Value'],
             Column::computed('action')
                 ->exportable(false)

@@ -62,7 +62,7 @@
                             @endif
                           </small>
                         </div>
-                        <small>Status: {{ getOpportunityStatus($item->opportunityState->opportunity_status_id) }}</small><br>
+                        <small>Status: {{ getOpportunityStatus($item->opportunityState->opportunityStateDetail->last()->opportunity_status_id) }}</small><br>
                       </div>
                     </div>
                   </a>

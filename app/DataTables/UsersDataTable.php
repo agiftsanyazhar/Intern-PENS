@@ -40,7 +40,7 @@ class UsersDataTable extends DataTable
                 if (strlen($note) > 25) {
                     $tooltipNote = $note;
                     $note = substr($note, 0, 25) . '...';
-                    return '<span title="' . $tooltipNote . '" style="color: #3a57e8;">' . $note . '</span>';
+                    return '<a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' . $tooltipNote . '">' . $note . '</a>';
                 }
                 return $note;
             })
@@ -64,7 +64,7 @@ class UsersDataTable extends DataTable
             ->setTableId('dataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+            ->dom('<"row align-items-center"<"col-md-6" l><"col-md-6"f>><"row my-3"<"col-md-12"B>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
             ->parameters([
                 "processing" => true,
                 "autoWidth" => false,

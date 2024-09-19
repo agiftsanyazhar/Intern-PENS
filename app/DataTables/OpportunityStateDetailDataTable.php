@@ -27,7 +27,7 @@ class OpportunityStateDetailDataTable extends DataTable
                 if (strlen($description) > 25) {
                     $tooltipDescription = $description;
                     $description = substr($description, 0, 25) . '...';
-                    return '<span title="' . $tooltipDescription . '" style="color: #3a57e8;">' . $description . '</span>';
+                    return '<a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' . $tooltipDescription . '">' . $description . '</a>';
                 }
                 return $description;
             })
@@ -62,7 +62,7 @@ class OpportunityStateDetailDataTable extends DataTable
             ->setTableId('dataTable')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('<"row align-items-center"<"col-md-2" l><"col-md-6" B><"col-md-4"f>><"table-responsive my-3" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
+            ->dom('<"row align-items-center"<"col-md-6" l><"col-md-6"f>><"row my-3"<"col-md-12"B>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">')
             ->parameters([
                 "processing" => true,
                 "autoWidth" => false,

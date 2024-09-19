@@ -15,14 +15,14 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         $customers = [];
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $customers[] = [
                 'company_name' => 'Customer ' . $i,
-                'company_address' => fake()->address . ' Cust ' . $i,
+                'company_address' => fake()->address . ' Customer ' . $i,
                 'company_email' => 'customer' . $i . '@gmail.com',
                 'company_phone' => fake()->phoneNumber,
                 'company_pic_name' => 'Customer PIC ' . $i,
-                'company_pic_address' => fake()->address . ' Cust PIC ' . $i,
+                'company_pic_address' => fake()->address . ' Customer PIC ' . $i,
                 'company_pic_email' => 'customer-pic' . $i . '@gmail.com',
                 'company_pic_phone' => fake()->phoneNumber,
             ];
