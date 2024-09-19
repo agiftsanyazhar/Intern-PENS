@@ -15,6 +15,10 @@
 <script src="{{asset('vendor/Leaflet/leaflet.js') }} "></script>
 <script src="{{asset('js/charts/vectore-chart.js') }}"></script>
 
+<link rel="stylesheet" href="//cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<script src="//cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap4.min.js"></script>
+
 <!-- fslightbox JavaScript -->
 <script src="{{asset('js/plugins/fslightbox.js')}}"></script>
 <script src="{{asset('js/plugins/slider-tabs.js') }}"></script>

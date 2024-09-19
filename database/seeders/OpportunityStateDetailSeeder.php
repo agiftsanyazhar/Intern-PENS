@@ -14,13 +14,13 @@ class OpportunityStateDetailSeeder extends Seeder
     public function run(): void
     {
         $opportunityStateDetails = [];
-        for ($i = 0; $i < 2500; $i++) {
+        for ($i = 0; $i < 25000; $i++) {
             $opportunityStateDetails[] = [
-                'opportunity_state_id' => rand(1, 1200),
+                'opportunity_state_id' => rand(1, 10000),
                 'opportunity_status_id' => rand(1, 5),
                 'description' => 'Opportunity state detail data ' . $i,
-                'created_by' => rand(1, 504),
-                'created_at' => fake()->date(),
+                'created_by' => rand(1, 1004),
+                'created_at' => fake()->dateTimeBetween('-5 years', 'now'),
             ];
         }
 
