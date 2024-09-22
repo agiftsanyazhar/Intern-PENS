@@ -18,11 +18,11 @@
             </div>
             <!-- Custom date range picker (hidden by default) -->
             <div id="custom-date-range" style="display: none; margin-top: 10px;">
-            <label>Start Date: </label>
-            <input type="date" id="start-date">
-            <label>End Date: </label>
-            <input type="date" id="end-date">
-            <button id="apply-custom-date" class="btn btn-primary">Apply</button>
+                <label>Start Date: </label>
+                <input type="date" id="start-date">
+                <label>End Date: </label>
+                <input type="date" id="end-date">
+                <button id="apply-custom-date" class="btn btn-primary">Apply</button>
             </div>
         </div>
         <div class="card-body">
