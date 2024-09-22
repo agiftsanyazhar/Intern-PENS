@@ -77,7 +77,7 @@ class HomeController extends Controller
         $assets = ['chart', 'animation'];
 
         // Pass the data to the view for initial page load
-        return view('dashboards.dashboard', compact(
+        return view('dashboards.charts.chart-earning', compact(
             'assets',
             'filterResult',
         ));
