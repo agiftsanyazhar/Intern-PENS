@@ -3,57 +3,84 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Customer;
-use App\Models\OpportunityState;
-use App\DataTables\{
-    OpportunityStateDataTable,
-    OpportunityStateDetailDataTable
-};
-use Illuminate\Support\Facades\DB;
-
+use App\Models\{Customer, OpportunityState};
+use App\Models\User;
 
 class HomeController extends Controller
 {
     /*
      * Dashboard Pages Routs
      */
-    public function index(Request $request)
+    public function index()
     {
-    $opportunity = DB::table('opportunity_states')->where('DELETED_AT',null)->get();
-        // Fetching total customers
-    $totalCustomers = Customer::count();
+        // Fetching total customers, users, and opportunities
+        $totalCustomers = Customer::count();
+        $totalUsers = User::count();
+        $totalOpportunities = OpportunityState::count();
 
-    // Fetching total opportunities
-    $totalOpportunities = OpportunityState::count();
+        // Fetching opportunity data
+        $opportunityGood = OpportunityState::where('health_id', '1')->count();
+        $opportunityFair = OpportunityState::where('health_id', '2')->count();
+        $opportunityPoor = OpportunityState::where('health_id', '3')->count();
+        $opportunityCritical = OpportunityState::where('health_id', '4')->count();
+        $opportunityCompleted = OpportunityState::where('opportunity_status_id', '4')->count();
+        $opportunityFailed = OpportunityState::where('opportunity_status_id', '5')->count();
+        $opportunityValue = OpportunityState::sum('opportunity_value');
 
-    // Fetching opportunities by status
-    $opportunityGood = OpportunityState::where('health_id', '1')->count();
-    $opportunityFair = OpportunityState::where('health_id', '2')->count();
-    $opportunityPoor = OpportunityState::where('health_id', '3')->count();
-    $opportunityCritical = OpportunityState::where('health_id', '4')->count();
-    $opportunityCompleted = OpportunityState::where('opportunity_status_id', '4')->count();
-    $opportunityFailed = OpportunityState::where('opportunity_status_id', '5')->count();
+        $assets = ['chart', 'animation'];
 
-    $opportunityValue = OpportunityState::sum('opportunity_value'); // Adjust 'value' to your actual column name
+        // Pass the data to the view for initial page load
+        return view('dashboards.dashboard', compact(
+            'assets',
+            'totalCustomers',
+            'totalUsers',
+            'totalOpportunities',
+            'opportunityGood',
+            'opportunityFair',
+            'opportunityPoor',
+            'opportunityCritical',
+            'opportunityCompleted',
+            'opportunityFailed',
+            'opportunityValue',
+        ));
+    }
 
+    public function earning(Request $request)
+    {
+        $filter = $request->input('filter', 'last_24_hours');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-    $assets = ['chart', 'animation'];
+        // Modify query based on filter
+        $query = OpportunityState::query();
+        $filterResult = 0; // Initialize filterResult as 0
+        $filterResult = $query->whereBetween('created_at', [
+            match ($filter) {
+                'last_24_hours' => [now()->subDay()->startOfDay(), now()->endOfDay()],
+                'last_7_days' => [now()->subDays(7), now()],
+                'last_30_days' => [now()->subDays(30), now()],
+                'last_60_days' => [now()->subDays(60), now()],
+                'last_90_days' => [now()->subDays(90), now()],
+                'custom' => [$startDate, $endDate],
+            },
+        ])
+            ->orderBy('created_at')
+            ->pluck('opportunity_value', 'created_at');
 
-    // Pass the data to the view
-    return view('dashboards.dashboard',['opportunity'=>$opportunity], compact(
-        'assets', 
-        'totalCustomers', 
-        'totalOpportunities', 
-        'opportunityGood', 
-        'opportunityFair', 
-        'opportunityPoor', 
-        'opportunityCritical', 
-        'opportunityCompleted', 
-        'opportunityFailed',
-        'opportunityValue' // Add the opportunity value to the view
+        // Return data via JSON if it's an AJAX request
+        if ($request->ajax()) {
+            return response()->json([
+                'filterResult' => $filterResult,
+            ]);
+        }
 
-    ));
-    
+        $assets = ['chart', 'animation'];
+
+        // Pass the data to the view for initial page load
+        return view('dashboards.dashboard', compact(
+            'assets',
+            'filterResult',
+        ));
     }
 
     /*
@@ -62,27 +89,27 @@ class HomeController extends Controller
     public function horizontal(Request $request)
     {
         $assets = ['chart', 'animation'];
-        return view('menu-style.horizontal',compact('assets'));
+        return view('menu-style.horizontal', compact('assets'));
     }
     public function dualhorizontal(Request $request)
     {
         $assets = ['chart', 'animation'];
-        return view('menu-style.dual-horizontal',compact('assets'));
+        return view('menu-style.dual-horizontal', compact('assets'));
     }
     public function dualcompact(Request $request)
     {
         $assets = ['chart', 'animation'];
-        return view('menu-style.dual-compact',compact('assets'));
+        return view('menu-style.dual-compact', compact('assets'));
     }
     public function boxed(Request $request)
     {
         $assets = ['chart', 'animation'];
-        return view('menu-style.boxed',compact('assets'));
+        return view('menu-style.boxed', compact('assets'));
     }
     public function boxedfancy(Request $request)
     {
         $assets = ['chart', 'animation'];
-        return view('menu-style.boxed-fancy',compact('assets'));
+        return view('menu-style.boxed-fancy', compact('assets'));
     }
 
     /*
@@ -96,7 +123,7 @@ class HomeController extends Controller
     public function calender(Request $request)
     {
         $assets = ['calender'];
-        return view('special-pages.calender',compact('assets'));
+        return view('special-pages.calender', compact('assets'));
     }
 
     public function kanban(Request $request)
@@ -221,7 +248,7 @@ class HomeController extends Controller
         return view('forms.validation');
     }
 
-     /*
+    /*
      * Table Page Routs
      */
     public function bootstraptable(Request $request)
