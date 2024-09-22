@@ -3,11 +3,11 @@
 
     function formatCurrency(value) {
         if (value >= 1000000000) {
-            return `${(value / 1000000000).toFixed(2).replace(".", ",")} M`;
+            return `${(value / 1000000000).toFixed(2).replace(".", ",")}M`;
         } else if (value >= 1000000) {
-            return `${(value / 1000000).toFixed(2).replace(".", ",")} Jt`;
+            return `${(value / 1000000).toFixed(2).replace(".", ",")}Jt`;
         } else if (value >= 1000) {
-            return `${(value / 1000).toFixed(2).replace(".", ",")} Rb`;
+            return `${(value / 1000).toFixed(2).replace(".", ",")}Rb`;
         }
         return value.toString();
     }
