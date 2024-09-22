@@ -150,3 +150,20 @@ function getNotification()
         ->take(3)
         ->get();
 }
+
+function formatCurrency(int $value)
+{
+    if ($value >= 1000000000) {
+        return number_format($value / 1000000000, 2, ',', '.') . 'M';
+    }
+
+    if ($value >= 1000000) {
+        return number_format($value / 1000000, 2, ',', '.') . 'Jt';
+    }
+
+    if ($value >= 1000) {
+        return number_format($value / 1000, 2, ',', '.') . 'Rb';
+    }
+
+    return $value;
+}
