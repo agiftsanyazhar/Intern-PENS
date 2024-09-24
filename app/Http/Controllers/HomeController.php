@@ -85,17 +85,19 @@ class HomeController extends Controller
                 match ($filter) {
                     'last_24_hours' => "DATE_FORMAT(created_at, '%H:%i') as formatted_date, SUM(opportunity_value) as value",
                     'last_7_days' => "DATE_FORMAT(created_at, '%a') as formatted_date, SUM(opportunity_value) as value",
-                    'last_30_days', 'last_60_days', 'last_90_days' => "DATE_FORMAT(created_at, '%b %d') as formatted_date, SUM(opportunity_value) as value",
+                    'last_30_days', 'last_60_days', 'last_90_days' => "DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value",
                     default => "DATE_FORMAT(created_at, '%Y/%m/%d') as formatted_date, SUM(opportunity_value) as value",
                 }
             )
+            ->orderBy('formatted_date')
             ->groupBy('formatted_date')
             ->pluck('value', 'formatted_date');
 
         // Completed earnings
         $completedEarnings = $baseQuery->clone()
             ->where('opportunity_status_id', 4)
-            ->selectRaw("DATE_FORMAT(created_at, '%b %d') as formatted_date, SUM(opportunity_value) as value")
+            ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
+            ->orderBy('formatted_date')
             ->groupBy('formatted_date')
             ->pluck(
                 'value',
@@ -105,7 +107,8 @@ class HomeController extends Controller
         // Failed earnings
         $failedEarnings = $baseQuery->clone()
             ->where('opportunity_status_id', 5)
-            ->selectRaw("DATE_FORMAT(created_at, '%b %d') as formatted_date, SUM(opportunity_value) as value")
+            ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
+            ->orderBy('formatted_date')
             ->groupBy('formatted_date')->pluck(
                 'value',
                 'formatted_date'

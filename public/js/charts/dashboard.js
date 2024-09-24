@@ -28,7 +28,6 @@
                 .then((response) => response.json())
                 .then((data) => {
                     const categories = Object.keys(data.totalEarnings); // Use dates as categories
-
                     const totalSeries = Object.values(data.totalEarnings);
                     const completedSeries = Object.values(
                         data.completedEarnings
@@ -66,7 +65,9 @@
                     // Now update the DOM with the respective sums
                     document.querySelector(
                         ".card-title"
-                    ).textContent = `Total: Rp${formatCurrency(totalSum)}`;
+                    ).textContent = `Total Earning: Rp${formatCurrency(
+                        totalSum
+                    )}`;
                     document.querySelector(
                         ".completed"
                     ).textContent = `Completed: Rp${formatCurrency(
