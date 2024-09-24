@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Customer, OpportunityState};
 use App\Models\User;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -25,7 +26,9 @@ class HomeController extends Controller
         $opportunityCritical = OpportunityState::where('health_id', '4')->count();
         $opportunityCompleted = OpportunityState::where('opportunity_status_id', '4')->count();
         $opportunityFailed = OpportunityState::where('opportunity_status_id', '5')->count();
-        $opportunityValue = OpportunityState::sum('opportunity_value');
+        $opportunityGrossValue = OpportunityState::sum('opportunity_value');
+        // $opportunityCompletedValue = OpportunityState::where('opportunity_status_id', '4')->sum('opportunity_value');
+        // $opportunityFailedValue = OpportunityState::where('opportunity_status_id', '5')->sum('opportunity_value');
 
         $assets = ['chart', 'animation'];
 
@@ -41,7 +44,9 @@ class HomeController extends Controller
             'opportunityCritical',
             'opportunityCompleted',
             'opportunityFailed',
-            'opportunityValue',
+            'opportunityGrossValue',
+            // 'opportunityCompletedValue',
+            // 'opportunityFailedValue',
         ));
     }
 
@@ -51,36 +56,77 @@ class HomeController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Modify query based on filter
-        $query = OpportunityState::query();
-        $filterResult = 0; // Initialize filterResult as 0
-        $filterResult = $query->whereBetween('created_at', [
-            match ($filter) {
-                'last_24_hours' => [now()->subDay()->startOfDay(), now()->endOfDay()],
-                'last_7_days' => [now()->subDays(7), now()],
-                'last_30_days' => [now()->subDays(30), now()],
-                'last_60_days' => [now()->subDays(60), now()],
-                'last_90_days' => [now()->subDays(90), now()],
-                'custom' => [$startDate, $endDate],
-            },
-        ])
-            ->orderBy('created_at')
-            ->pluck('opportunity_value', 'created_at');
+        // Define date ranges based on filters
+        $endDate = now();
+        $startDate = match ($filter) {
+            'last_24_hours' => $endDate->copy()->subDay()->startOfDay(),
+            'last_7_days' => $endDate->copy()->subDays(7),
+            'last_30_days' => $endDate->copy()->subDays(30),
+            'last_60_days' => $endDate->copy()->subDays(60),
+            'last_90_days' => $endDate->copy()->subDays(90),
+            'custom' => $startDate ? Carbon::parse($startDate) : null,
+            'all_time' => null, // No start date for all_time
+        };
 
-        // Return data via JSON if it's an AJAX request
+        // Handle custom date range for 'custom' filter
+        if ($filter === 'custom' && $request->input('end_date')) {
+            $endDate = Carbon::parse($endDate)->endOfDay();
+        }
+
+        // Only apply date range filtering if the filter is NOT 'all_time'
+        $baseQuery = OpportunityState::query();
+        if ($filter !== 'all_time') {
+            $baseQuery = $baseQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        // Total earnings (no status filter)
+        $totalEarnings = $baseQuery->clone()
+            ->selectRaw(
+                match ($filter) {
+                    'last_24_hours' => "DATE_FORMAT(created_at, '%H:%i') as formatted_date, SUM(opportunity_value) as value",
+                    'last_7_days' => "DATE_FORMAT(created_at, '%a') as formatted_date, SUM(opportunity_value) as value",
+                    'last_30_days', 'last_60_days', 'last_90_days' => "DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value",
+                    default => "DATE_FORMAT(created_at, '%Y/%m/%d') as formatted_date, SUM(opportunity_value) as value",
+                }
+            )
+            ->orderBy('formatted_date')
+            ->groupBy('formatted_date')
+            ->pluck('value', 'formatted_date');
+
+        // Completed earnings
+        $completedEarnings = $baseQuery->clone()
+            ->where('opportunity_status_id', 4)
+            ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
+            ->orderBy('formatted_date')
+            ->groupBy('formatted_date')
+            ->pluck(
+                'value',
+                'formatted_date'
+            );
+
+        // Failed earnings
+        $failedEarnings = $baseQuery->clone()
+            ->where('opportunity_status_id', 5)
+            ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
+            ->orderBy('formatted_date')
+            ->groupBy('formatted_date')->pluck(
+                'value',
+                'formatted_date'
+            );
+
+        // Return the data as JSON
         if ($request->ajax()) {
             return response()->json([
-                'filterResult' => $filterResult,
+                'totalEarnings' => $totalEarnings,
+                'completedEarnings' => $completedEarnings,
+                'failedEarnings' => $failedEarnings,
             ]);
         }
 
         $assets = ['chart', 'animation'];
 
         // Pass the data to the view for initial page load
-        return view('dashboards.charts.chart-earning', compact(
-            'assets',
-            'filterResult',
-        ));
+        return view('dashboards.charts.chart-earning', compact('assets', 'filterResult',));
     }
 
     /*

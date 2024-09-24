@@ -9,13 +9,15 @@
         } else if (value >= 1000) {
             return `${(value / 1000).toFixed(2).replace(".", ",")}Rb`;
         }
-        return value.toString();
+        return value;
     }
 
     if (document.querySelectorAll("#d-main").length) {
-        const updateChart = (filter, startDate = null, endDate = null) => {
-            let url = `/earning?filter=${filter}`;
-            if (filter === "custom" && startDate && endDate) {
+        let selectedTimeFilter = "last_24_hours"; // Default time filter
+
+        const updateChart = (timeFilter, startDate = null, endDate = null) => {
+            let url = `/earning?filter=${timeFilter}`;
+            if (timeFilter === "custom" && startDate && endDate) {
                 url += `&start_date=${startDate}&end_date=${endDate}`;
             }
 
@@ -25,32 +27,67 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    const xCategories = Object.keys(data.filterResult);
-                    const seriesData = Object.values(data.filterResult);
+                    const categories = Object.keys(data.totalEarnings); // Use dates as categories
+                    const totalSeries = Object.values(data.totalEarnings);
+                    const completedSeries = Object.values(
+                        data.completedEarnings
+                    );
+                    const failedSeries = Object.values(data.failedEarnings);
 
-                    // Sum the seriesData before formatting
-                    const totalSum = seriesData.reduce((a, b) => a + b, 0);
-
+                    // Update the chart with multiple series
                     const newOptions = {
-                        series: [{ name: "Total", data: seriesData }],
-                        xaxis: { categories: xCategories },
+                        series: [
+                            { name: "Total Earning", data: totalSeries },
+                            { name: "Completed", data: completedSeries },
+                            { name: "Failed", data: failedSeries },
+                        ],
+                        xaxis: { categories: categories },
                     };
+
                     chart.updateOptions(newOptions);
 
-                    // Apply formatting to the summed total
+                    // Utility function to filter out non-numeric values and sum the numeric ones
+                    const sumSeries = (series) => {
+                        return series
+                            .filter((value) => !isNaN(value)) // Keep only numeric values
+                            .reduce((a, b) => a + Number(b), 0); // Sum up the numbers
+                    };
+
+                    // 1. Calculate totalSum: sum of completedSeries + failedSeries
+                    const totalSum = sumSeries(totalSeries);
+
+                    // 2. Calculate completedSum: sum of completedSeries only
+                    const completedSum = sumSeries(completedSeries);
+
+                    // 3. Calculate failedSum: sum of failedSeries only
+                    const failedSum = sumSeries(failedSeries);
+
+                    // Now update the DOM with the respective sums
                     document.querySelector(
                         ".card-title"
                     ).textContent = `Total Earning: Rp${formatCurrency(
                         totalSum
                     )}`;
+                    document.querySelector(
+                        ".completed"
+                    ).textContent = `Completed: Rp${formatCurrency(
+                        completedSum
+                    )}`;
+                    document.querySelector(
+                        ".failed"
+                    ).textContent = `Failed: Rp${formatCurrency(failedSum)}`;
                 })
                 .catch((error) => console.error("Error:", error));
         };
 
         const chart = new ApexCharts(document.querySelector("#d-main"), {
-            series: [{ name: "Total", data: [] }],
+            series: [
+                { name: "Total Earning", data: [] },
+                { name: "Completed", data: [] },
+                { name: "Failed", data: [] },
+            ],
             chart: { height: 350, type: "area", toolbar: { show: false } },
-            colors: ["#3a57e8", "#4bc7d2"],
+            colors: ["#3a57e8", "#1aa053", "#c03321"],
             dataLabels: { enabled: false },
             stroke: { curve: "smooth", width: 3 },
             yaxis: {
@@ -67,42 +104,44 @@
                 },
             },
         });
+
         chart.render();
 
-        updateChart("last_24_hours");
+        // Initial chart update
+        updateChart(selectedTimeFilter);
 
         const dropdownItems = document.querySelectorAll(".dropdown-item");
         dropdownItems.forEach((item) => {
             item.addEventListener("click", (e) => {
                 e.preventDefault();
 
-                const filter = item.textContent
+                selectedTimeFilter = item.textContent
                     .trim()
                     .toLowerCase()
                     .replace(/\s+/g, "_");
 
-                if (filter === "custom") {
+                if (selectedTimeFilter === "custom") {
                     document.getElementById("custom-date-range").style.display =
                         "block";
                 } else {
                     document.getElementById("custom-date-range").style.display =
                         "none";
-                    updateChart(filter);
+                    updateChart(selectedTimeFilter);
                 }
 
                 const dropdownToggle = document.querySelector(
-                    "#dropdownMenuButton2"
+                    "#dropdownMenuButton"
                 );
                 dropdownToggle.textContent = item.textContent;
             });
         });
 
+        // Custom date range apply logic (unchanged)
         document
             .getElementById("apply-custom-date")
             .addEventListener("click", () => {
                 const startDate = document.getElementById("start-date").value;
                 const endDate = document.getElementById("end-date").value;
-
                 if (startDate && endDate) {
                     updateChart("custom", startDate, endDate);
                 } else {
