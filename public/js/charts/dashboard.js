@@ -2,7 +2,9 @@
     "use strict";
 
     function formatCurrency(value) {
-        if (value >= 1000000000) {
+        if (value >= 1000000000000) {
+            return `${(value / 1000000000000).toFixed(2).replace(".", ",")}T`;
+        } else if (value >= 1000000000) {
             return `${(value / 1000000000).toFixed(2).replace(".", ",")}M`;
         } else if (value >= 1000000) {
             return `${(value / 1000000).toFixed(2).replace(".", ",")}Jt`;
@@ -12,7 +14,7 @@
         return value;
     }
 
-    if (document.querySelectorAll("#d-main").length) {
+    if (document.querySelectorAll("#chart-earning").length) {
         let selectedTimeFilter = "last_24_hours"; // Default time filter
 
         const updateChart = (timeFilter, startDate = null, endDate = null) => {
@@ -54,12 +56,10 @@
                     };
 
                     // 1. Calculate totalSum: sum of completedSeries + failedSeries
-                    const totalSum = sumSeries(totalSeries);
-
                     // 2. Calculate completedSum: sum of completedSeries only
-                    const completedSum = sumSeries(completedSeries);
-
                     // 3. Calculate failedSum: sum of failedSeries only
+                    const totalSum = sumSeries(totalSeries);
+                    const completedSum = sumSeries(completedSeries);
                     const failedSum = sumSeries(failedSeries);
 
                     // Now update the DOM with the respective sums
@@ -80,7 +80,7 @@
                 .catch((error) => console.error("Error:", error));
         };
 
-        const chart = new ApexCharts(document.querySelector("#d-main"), {
+        const chart = new ApexCharts(document.querySelector("#chart-earning"), {
             series: [
                 { name: "Total Earning", data: [] },
                 { name: "Completed", data: [] },
@@ -110,7 +110,7 @@
         // Initial chart update
         updateChart(selectedTimeFilter);
 
-        const dropdownItems = document.querySelectorAll(".dropdown-item");
+        const dropdownItems = document.querySelectorAll(".chart-earning");
         dropdownItems.forEach((item) => {
             item.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -121,16 +121,18 @@
                     .replace(/\s+/g, "_");
 
                 if (selectedTimeFilter === "custom") {
-                    document.getElementById("custom-date-range").style.display =
-                        "block";
+                    document.getElementById(
+                        "custom-date-range-chart-earning"
+                    ).style.display = "block";
                 } else {
-                    document.getElementById("custom-date-range").style.display =
-                        "none";
+                    document.getElementById(
+                        "custom-date-range-chart-earning"
+                    ).style.display = "none";
                     updateChart(selectedTimeFilter);
                 }
 
                 const dropdownToggle = document.querySelector(
-                    "#dropdownMenuButton"
+                    "#dropdownMenuButtonChartEarning"
                 );
                 dropdownToggle.textContent = item.textContent;
             });
@@ -138,12 +140,224 @@
 
         // Custom date range apply logic (unchanged)
         document
-            .getElementById("apply-custom-date")
+            .getElementById("apply-custom-date-chart-earning")
             .addEventListener("click", () => {
-                const startDate = document.getElementById("start-date").value;
-                const endDate = document.getElementById("end-date").value;
+                const startDate = document.getElementById(
+                    "start-date-chart-earning"
+                ).value;
+                const endDate = document.getElementById(
+                    "end-date-chart-earning"
+                ).value;
+
                 if (startDate && endDate) {
                     updateChart("custom", startDate, endDate);
+                } else {
+                    alert("Please select both start and end dates.");
+                }
+            });
+    }
+
+    if (document.querySelectorAll("#performance-earning").length) {
+        // Dropdown items event listener
+        const dropdownItems = document.querySelectorAll(".performance-earning");
+        const customFilter = document.getElementById("custom-filter");
+        const customDateRange = document.getElementById(
+            "custom-date-range-performance-earning"
+        );
+        const applyCustomDateBtn = document.getElementById(
+            "apply-custom-date-performance-earning"
+        );
+
+        let selectedFilter = "yoy"; // Default to YoY
+
+        const fetchPerformanceMetrics = (
+            filter,
+            startDate = null,
+            endDate = null
+        ) => {
+            let url = `/performance?filter=${filter}`;
+
+            if (filter === "custom" && startDate && endDate) {
+                url += `&start_date=${startDate}&end_date=${endDate}`;
+            }
+
+            fetch(url, {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update the badge and the total value displayed in the view
+                    updateMetricsDisplay(data, filter);
+                })
+                .catch((error) => console.error("Error:", error));
+        };
+
+        // Function to update the metrics in the view
+        const updateMetricsDisplay = (data, filter) => {
+            const badge = document.querySelector(".badge");
+            const totalValue = document.querySelector(
+                ".performance-earning h2"
+            );
+
+            switch (filter) {
+                case "yoy":
+                    badge.textContent = `YoY ${data.yoy.percentage}%`;
+                    totalValue.textContent = `Rp${formatCurrency(
+                        data.yoy.current_value
+                    )}`;
+                    break;
+                case "ytd":
+                    badge.textContent = `YTD ${data.ytd.percentage}%`;
+                    totalValue.textContent = `Rp${formatCurrency(
+                        data.ytd.current_value
+                    )}`;
+                    break;
+                case "qoq":
+                    badge.textContent = `QoQ ${data.qoq.percentage}%`;
+                    totalValue.textContent = `Rp${formatCurrency(
+                        data.qoq.current_value
+                    )}`;
+                    break;
+                case "mom":
+                    badge.textContent = `MoM ${data.mom.percentage}%`;
+                    totalValue.textContent = `Rp${formatCurrency(
+                        data.mom.current_value
+                    )}`;
+                    break;
+            }
+
+            if (data[filter].percentage === 0) {
+                badge.classList.remove("bg-success", "bg-danger");
+                badge.classList.add("bg-dark");
+            } else if (data[filter].percentage > 0) {
+                badge.classList.remove("bg-dark", "bg-danger");
+                badge.classList.add("bg-success");
+            } else {
+                badge.classList.remove("bg-dark", "bg-success");
+                badge.classList.add("bg-danger");
+            }
+        };
+
+        // Initialize with YoY data
+        fetchPerformanceMetrics("yoy");
+
+        // Dropdown click handler
+        dropdownItems.forEach((item) => {
+            item.addEventListener("click", function (e) {
+                e.preventDefault();
+                selectedFilter = this.textContent
+                    .trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, "_");
+
+                // Hide custom date range if not custom filter
+                if (selectedFilter !== "custom") {
+                    customDateRange.style.display = "none";
+                    fetchPerformanceMetrics(selectedFilter);
+                } else {
+                    customDateRange.style.display = "block";
+                }
+
+                // Update dropdown button text
+                document.querySelector(
+                    "#dropdownMenuButtonPerformanceEarning"
+                ).textContent = this.textContent;
+            });
+        });
+
+        // Apply custom date range
+        applyCustomDateBtn.addEventListener("click", function () {
+            const startDate = document.getElementById(
+                "start-date-performance-earning"
+            ).value;
+            const endDate = document.getElementById(
+                "end-date-performance-earning"
+            ).value;
+
+            if (startDate && endDate) {
+                fetchPerformanceMetrics("custom", startDate, endDate);
+            } else {
+                alert("Please select both start and end dates.");
+            }
+        });
+    }
+
+    if (document.querySelectorAll(".chart-opportunity").length) {
+        let selectedFilter = "last_24_hours"; // Default filter
+
+        // Function to fetch data based on selected filter
+        const fetchOpportunityData = (
+            filter,
+            startDate = null,
+            endDate = null
+        ) => {
+            let url = `/opportunity?filter=${filter}`; // Define the URL for the request
+
+            if (filter === "custom" && startDate && endDate) {
+                url += `&start_date=${startDate}&end_date=${endDate}`;
+            }
+
+            // Fetch data from the server
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    document.querySelector(".opportunities").textContent =
+                        formatCurrency(data.new_opportunities);
+                    document.querySelector(".customers").textContent =
+                        data.new_customers;
+                })
+                .catch((error) => console.error("Error fetching data:", error));
+        };
+
+        fetchOpportunityData(selectedFilter);
+
+        // Dropdown click handler
+        const dropdownItems = document.querySelectorAll(".chart-opportunity");
+        dropdownItems.forEach((item) => {
+            item.addEventListener("click", function (e) {
+                e.preventDefault();
+                selectedFilter = this.textContent
+                    .trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, "_");
+
+                if (selectedFilter === "custom") {
+                    document.getElementById(
+                        "custom-date-range-chart-opportunity"
+                    ).style.display = "block";
+                } else {
+                    document.getElementById(
+                        "custom-date-range-chart-opportunity"
+                    ).style.display = "none";
+                    fetchOpportunityData(selectedFilter); // Fetch data for non-custom filters
+                }
+
+                // Update dropdown button text
+                document.querySelector(
+                    "#dropdownMenuButtonChartOpportunity"
+                ).textContent = this.textContent;
+            });
+        });
+
+        // Custom date range apply logic
+        document
+            .getElementById("apply-custom-date-chart-opportunity")
+            .addEventListener("click", function () {
+                const startDate = document.getElementById(
+                    "start-date-chart-opportunity"
+                ).value;
+                const endDate = document.getElementById(
+                    "end-date-chart-opportunity"
+                ).value;
+
+                if (startDate && endDate) {
+                    fetchOpportunityData("custom", startDate, endDate); // Fetch data for custom date range
                 } else {
                     alert("Please select both start and end dates.");
                 }

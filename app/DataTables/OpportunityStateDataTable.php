@@ -27,7 +27,7 @@ class OpportunityStateDataTable extends DataTable
                 return getOpportunityHealthBadge($opportunityState->health_id);
             })
             ->editColumn('opportunity_status_id', function ($opportunityStateDetail) {
-                return getOpportunityStatus($opportunityStateDetail->opportunity_status_id);
+                return getOpportunityStatusNameById($opportunityStateDetail->opportunity_status_id);
             })
             ->editColumn('opportunity_value', fn($opportunityState) => 'Rp' . number_format($opportunityState->opportunity_value, 0, ',', '.'))
             ->editColumn('created_by', fn($opportunityState) => $opportunityState->createdByUser ? $opportunityState->createdByUser->name . '<br><small>' . date('Y/m/d H:i', strtotime($opportunityState->created_at)) . '</small>' : '-')

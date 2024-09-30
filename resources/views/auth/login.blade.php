@@ -7,6 +7,11 @@
                   <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                      <div class="card-body">
                         <h2 class="mb-2 text-center">Sign In</h2>
+                        <x-auth-session-status :status="session('status')" />
+
+                        <!-- Validation Errors -->
+                        <x-auth-validation-errors :errors="$errors" />
+
                         <form method="POST" action="{{ route('login') }}" data-toggle="validator">
                            @csrf
 

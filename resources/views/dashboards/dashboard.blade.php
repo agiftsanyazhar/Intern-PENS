@@ -46,10 +46,6 @@
                   <div class="text-end">
                      <h2 class="counter">Rp{{ formatCurrency($opportunityGrossValue) }}</h2>
                      Total Earning
-                     {{-- <h2 class="counter">Rp{{ formatCurrency($opportunityCompletedValue) }}</h2>
-                     Completed Earning
-                     <h2 class="counter">Rp{{ formatCurrency($opportunityFailedValue) }}</h2>
-                     Failed Earning --}}
                   </div>
                </div>
             </div>
@@ -260,22 +256,7 @@
                <div class="card overflow-hidden" data-aos="fade-up" data-aos-delay="400">
                   <div class="card-header d-flex justify-content-between flex-wrap">
                      <div class="header-title">
-                        <h4 class="card-title mb-2">Enterprise Clients</h4>
-                        <p class="mb-0">
-                           <svg class ="me-2" width="24" height="24" viewBox="0 0 24 24">
-                              <path fill="#3a57e8" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-                           </svg>
-                           15 new acquired this month
-                        </p>
-                     </div>
-                     <div class="dropdown">
-                        <span class="dropdown-toggle" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-expanded="false" role="button">
-                        </span>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton7">
-                           <a class="dropdown-item " href="javascript:void(0);">Action</a>
-                           <a class="dropdown-item " href="javascript:void(0);">Another action</a>
-                           <a class="dropdown-item " href="javascript:void(0);">Something else here</a>
-                        </div>
+                        <h4 class="card-title mb-2">Top 5 Customers by Opportunitiy Value</h4>
                      </div>
                   </div>
                   <div class="card-body p-0">
@@ -293,7 +274,6 @@
                               <tr>
                                  <td>
                                     <div class="d-flex align-items-center">
-                                       <img class="bg-soft-primary rounded img-fluid avatar-40 me-3" src="{{asset('images/shapes/01.png')}}" alt="profile">
                                        <h6>Addidis Sportwear</h6>
                                     </div>
                                  </td>
@@ -323,7 +303,6 @@
                               <tr>
                                  <td>
                                     <div class="d-flex align-items-center">
-                                       <img class="bg-soft-primary rounded img-fluid avatar-40 me-3" src="{{asset('images/shapes/05.png')}}" alt="profile">
                                        <h6>Netflixer Platforms</h6>
                                     </div>
                                  </td>
@@ -350,7 +329,6 @@
                               <tr>
                                  <td>
                                     <div class="d-flex align-items-center">
-                                       <img class="bg-soft-primary rounded img-fluid avatar-40 me-3" src="{{asset('images/shapes/02.png')}}" alt="profile">
                                        <h6>Shopifi Stores</h6>
                                     </div>
                                  </td>
@@ -377,7 +355,6 @@
                               <tr>
                                  <td>
                                     <div class="d-flex align-items-center">
-                                       <img class="bg-soft-primary rounded img-fluid avatar-40 me-3" src="{{asset('images/shapes/03.png')}}" alt="profile">
                                        <h6>Bootstrap Technologies</h6>
                                     </div>
                                  </td>
@@ -410,7 +387,6 @@
                               <tr>
                                  <td>
                                     <div class="d-flex align-items-center">
-                                       <img class="bg-soft-primary rounded img-fluid avatar-40 me-3" src="{{asset('images/shapes/04.png')}}" alt="profile">
                                        <h6>Community First</h6>
                                     </div>
                                  </td>
@@ -441,58 +417,10 @@
       </div>
       <div class="col-md-12 col-lg-4">
          <div class="row">
-            @include('dashboards.charts.life-time')
-            <div class="col-md-12 col-lg-12">
-               <div class="card" data-aos="fade-up" data-aos-delay="400">
-                  <div class="card-header d-flex justify-content-between flex-wrap">
-                     <div class="header-title">
-                        <h4 class="card-title mb-2">Activity overview</h4>
-                        <p class="mb-0">
-                           <svg class ="me-2" width="24" height="24" viewBox="0 0 24 24">
-                              <path fill="#17904b" d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" />
-                           </svg>
-                           16% this month
-                        </p>
-                     </div>
-                  </div>
-                  <div class="card-body">
-                     <div class=" d-flex profile-media align-items-top mb-2">
-                        <div class="profile-dots-pills border-primary mt-1"></div>
-                        <div class="ms-4">
-                           <h6 class=" mb-1">$2400, Purchase</h6>
-                           <span class="mb-0">11 JUL 8:10 PM</span>
-                        </div>
-                     </div>
-                     <div class=" d-flex profile-media align-items-top mb-2">
-                        <div class="profile-dots-pills border-primary mt-1"></div>
-                        <div class="ms-4">
-                           <h6 class=" mb-1">New order #8744152</h6>
-                           <span class="mb-0">11 JUL 11 PM</span>
-                        </div>
-                     </div>
-                     <div class=" d-flex profile-media align-items-top mb-2">
-                        <div class="profile-dots-pills border-primary mt-1"></div>
-                        <div class="ms-4">
-                           <h6 class=" mb-1">Affiliate Payout</h6>
-                           <span class="mb-0">11 JUL 7:64 PM</span>
-                        </div>
-                     </div>
-                     <div class=" d-flex profile-media align-items-top mb-2">
-                        <div class="profile-dots-pills border-primary mt-1"></div>
-                        <div class="ms-4">
-                           <h6 class=" mb-1">New user added</h6>
-                           <span class="mb-0">11 JUL 1:21 AM</span>
-                        </div>
-                     </div>
-                     <div class=" d-flex profile-media align-items-top mb-1">
-                        <div class="profile-dots-pills border-primary mt-1"></div>
-                        <div class="ms-4">
-                           <h6 class=" mb-1">Product added</h6>
-                           <span class="mb-0">11 JUL 4:50 AM</span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+            <div class="col-md-6 col-lg-12">
+               @include('dashboards.charts.performance-earning')
+               @include('dashboards.charts.chart-opportunities')
+               @include('dashboards.charts.activity-overview')
             </div>
          </div>
       </div>

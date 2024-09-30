@@ -20,7 +20,7 @@ class OpportunityStateDetailDataTable extends DataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->editColumn('opportunity_status_id', function ($opportunityStateDetail) {
-                return getOpportunityStatus($opportunityStateDetail->opportunity_status_id);
+                return getOpportunityStatusNameById($opportunityStateDetail->opportunity_status_id);
             })
             ->editColumn('description', function ($opportunityStateDetail) {
                 $description = $opportunityStateDetail->description ?? '-';

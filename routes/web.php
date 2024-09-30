@@ -60,7 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Dashboard Routes
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-    Route::get('/earning', [HomeController::class, 'earning']);
+    Route::get('/earning', [HomeController::class, 'earning']);   // Earning Routes
+    Route::get('/performance', [HomeController::class, 'getPerformanceMetrics']);   // Performance Routes
+    Route::get('/opportunity', [HomeController::class, 'getOpportunities']);   // Performance Routes
 
     // Users Module
     Route::resource('users', UserController::class);

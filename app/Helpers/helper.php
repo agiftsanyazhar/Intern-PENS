@@ -106,16 +106,22 @@ function getFileExistsCheck($media)
     return $mediaCondition;
 }
 
-function getOpportunityStatus($statusId): string
+function getOpportunityStatusNameById($statusId): string
 {
-    return match ($statusId) {
-        1 => 'Inquiry',
-        2 => 'Follow Up',
-        3 => 'Stale',
-        4 => 'Completed',
-        5 => 'Failed',
-        default => '-',
-    };
+    switch ($statusId) {
+        case 1:
+            return 'Inquiry';
+        case 2:
+            return 'Follow Up';
+        case 3:
+            return 'Stale';
+        case 4:
+            return 'Completed';
+        case 5:
+            return 'Failed';
+        default:
+            return '-';
+    }
 }
 
 function getOpportunityHealthBadge(int $healthId): string
@@ -153,15 +159,13 @@ function getNotification()
 
 function formatCurrency(int $value)
 {
-    if ($value >= 1000000000) {
+    if ($value >= 1000000000000) {
+        return number_format($value / 1000000000000, 2, ',', '.') . 'T';
+    } else if ($value >= 1000000000) {
         return number_format($value / 1000000000, 2, ',', '.') . 'M';
-    }
-
-    if ($value >= 1000000) {
+    } else if ($value >= 1000000) {
         return number_format($value / 1000000, 2, ',', '.') . 'Jt';
-    }
-
-    if ($value >= 1000) {
+    } else if ($value >= 1000) {
         return number_format($value / 1000, 2, ',', '.') . 'Rb';
     }
 
