@@ -29,6 +29,9 @@ class HomeController extends Controller
 
         $assets = ['chart', 'animation'];
 
+        $tenRecentOpportunities = $this->getRecentActivity()[0];
+        $percentageOfTenRecentOpportunities = $this->getRecentActivity()[1]['percentage'];
+
         return view('dashboards.dashboard', compact(
             'assets',
             'totalCustomers',
@@ -41,6 +44,8 @@ class HomeController extends Controller
             'opportunityCompleted',
             'opportunityFailed',
             'opportunityGrossValue',
+            'tenRecentOpportunities',
+            'percentageOfTenRecentOpportunities'
         ));
     }
 
@@ -195,7 +200,14 @@ class HomeController extends Controller
         return view('dashboards.charts.chart-opportunities');
     }
 
+    public function getRecentActivity()
+    {
+        $percentage = $this->calculateMoM();
 
+        $recentActivity = OpportunityState::orderBy('created_at', 'desc')->limit(10)->get();
+
+        return [$recentActivity, $percentage];
+    }
     private function calculateYoY()
     {
         $currentYear = now()->year;

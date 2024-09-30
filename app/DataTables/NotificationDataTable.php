@@ -45,7 +45,7 @@ class NotificationDataTable extends DataTable
                 return getOpportunityHealthBadge($notification->opportunityState->health_id);
             })
             ->editColumn('opportunity_status_id', function ($notification) {
-                return getOpportunityStatus($notification->opportunityState->opportunityStateDetail->last()->opportunity_status_id);
+                return getOpportunityStatusNameById($notification->opportunityState->opportunityStateDetail->last()->opportunity_status_id);
             })
             ->editColumn('sender_id', function ($notification) {
                 return $notification->sender->name;

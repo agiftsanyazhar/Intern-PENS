@@ -33,7 +33,7 @@
                         <p class="fw-bold">Status:</p>
                      </div>
                      <div class="col-md-10">
-                        <p>{{ getOpportunityStatus($opportunityState->opportunity_status_id) }}</p>
+                        <p>{{ getOpportunityStatusNameById($opportunityState->opportunity_status_id) }}</p>
                      </div>
                      <div class="col-md-2">
                         <p class="fw-bold">Value:</p>

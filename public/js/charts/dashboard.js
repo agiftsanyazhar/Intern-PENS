@@ -2,7 +2,9 @@
     "use strict";
 
     function formatCurrency(value) {
-        if (value >= 1000000000) {
+        if (value >= 1000000000000) {
+            return `${(value / 1000000000000).toFixed(2).replace(".", ",")}T`;
+        } else if (value >= 1000000000) {
             return `${(value / 1000000000).toFixed(2).replace(".", ",")}M`;
         } else if (value >= 1000000) {
             return `${(value / 1000000).toFixed(2).replace(".", ",")}Jt`;

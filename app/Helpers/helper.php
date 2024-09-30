@@ -106,7 +106,7 @@ function getFileExistsCheck($media)
     return $mediaCondition;
 }
 
-function getOpportunityStatus($statusId): string
+function getOpportunityStatusNameById($statusId): string
 {
     switch ($statusId) {
         case 1:
@@ -159,15 +159,13 @@ function getNotification()
 
 function formatCurrency(int $value)
 {
-    if ($value >= 1000000000) {
+    if ($value >= 1000000000000) {
+        return number_format($value / 1000000000000, 2, ',', '.') . 'T';
+    } else if ($value >= 1000000000) {
         return number_format($value / 1000000000, 2, ',', '.') . 'M';
-    }
-
-    if ($value >= 1000000) {
+    } else if ($value >= 1000000) {
         return number_format($value / 1000000, 2, ',', '.') . 'Jt';
-    }
-
-    if ($value >= 1000) {
+    } else if ($value >= 1000) {
         return number_format($value / 1000, 2, ',', '.') . 'Rb';
     }
 
