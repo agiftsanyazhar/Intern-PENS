@@ -441,7 +441,10 @@
       </div>
       <div class="col-md-12 col-lg-4">
          <div class="row">
-            @include('dashboards.charts.life-time')
+            <div class="col-md-6 col-lg-12">
+               @include('dashboards.charts.performance-earning')
+               @include('dashboards.charts.chart-opportunities')
+            </div>
             <div class="col-md-12 col-lg-12">
                <div class="card" data-aos="fade-up" data-aos-delay="400">
                   <div class="card-header d-flex justify-content-between flex-wrap">

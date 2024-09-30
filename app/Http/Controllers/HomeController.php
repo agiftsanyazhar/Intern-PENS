@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Customer, OpportunityState};
-use App\Models\User;
+use App\Models\{Customer, OpportunityState, User};
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -27,12 +26,9 @@ class HomeController extends Controller
         $opportunityCompleted = OpportunityState::where('opportunity_status_id', '4')->count();
         $opportunityFailed = OpportunityState::where('opportunity_status_id', '5')->count();
         $opportunityGrossValue = OpportunityState::sum('opportunity_value');
-        // $opportunityCompletedValue = OpportunityState::where('opportunity_status_id', '4')->sum('opportunity_value');
-        // $opportunityFailedValue = OpportunityState::where('opportunity_status_id', '5')->sum('opportunity_value');
 
         $assets = ['chart', 'animation'];
 
-        // Pass the data to the view for initial page load
         return view('dashboards.dashboard', compact(
             'assets',
             'totalCustomers',
@@ -45,8 +41,6 @@ class HomeController extends Controller
             'opportunityCompleted',
             'opportunityFailed',
             'opportunityGrossValue',
-            // 'opportunityCompletedValue',
-            // 'opportunityFailedValue',
         ));
     }
 
@@ -56,7 +50,6 @@ class HomeController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        // Define date ranges based on filters
         $endDate = now();
         $startDate = match ($filter) {
             'last_24_hours' => $endDate->copy()->subDay()->startOfDay(),
@@ -64,12 +57,13 @@ class HomeController extends Controller
             'last_30_days' => $endDate->copy()->subDays(30),
             'last_60_days' => $endDate->copy()->subDays(60),
             'last_90_days' => $endDate->copy()->subDays(90),
+            'all_time' => null,
             'custom' => $startDate ? Carbon::parse($startDate) : null,
-            'all_time' => null, // No start date for all_time
+            default => $endDate->copy()->subDay()->startOfDay(),
         };
 
         // Handle custom date range for 'custom' filter
-        if ($filter === 'custom' && $request->input('end_date')) {
+        if ($filter === 'custom' && $endDate) {
             $endDate = Carbon::parse($endDate)->endOfDay();
         }
 
@@ -109,12 +103,12 @@ class HomeController extends Controller
             ->where('opportunity_status_id', 5)
             ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
             ->orderBy('formatted_date')
-            ->groupBy('formatted_date')->pluck(
+            ->groupBy('formatted_date')
+            ->pluck(
                 'value',
                 'formatted_date'
             );
 
-        // Return the data as JSON
         if ($request->ajax()) {
             return response()->json([
                 'totalEarnings' => $totalEarnings,
@@ -125,8 +119,205 @@ class HomeController extends Controller
 
         $assets = ['chart', 'animation'];
 
-        // Pass the data to the view for initial page load
-        return view('dashboards.charts.chart-earning', compact('assets', 'filterResult',));
+        return view('dashboards.charts.chart-earning', compact('assets'));
+    }
+
+    public function getPerformanceMetrics(Request $request)
+    {
+        $filter = $request->query('filter');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        switch ($filter) {
+            case 'yoy':
+                $yoy = $this->calculateYoY();
+                return response()->json(['yoy' => $yoy]);
+            case 'ytd':
+                $ytd = $this->calculateYTD();
+                return response()->json(['ytd' => $ytd]);
+            case 'qoq':
+                $qoq = $this->calculateQoQ();
+                return response()->json(['qoq' => $qoq]);
+            case 'mom':
+                $mom = $this->calculateMoM();
+                return response()->json(['mom' => $mom]);
+            default:
+                return response()->json(['error' => 'Invalid filter']);
+        }
+
+        return view('dashboards.charts.performance-earning');
+    }
+
+    public function getOpportunities(Request $request)
+    {
+        $filter = $request->query('filter', 'last_24_hours');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        $endDate = now();
+        $startDate = match ($filter) {
+            'last_24_hours' => $endDate->copy()->subDay()->startOfDay(),
+            'last_7_days' => $endDate->copy()->subDays(7),
+            'last_30_days' => $endDate->copy()->subDays(30),
+            'last_60_days' => $endDate->copy()->subDays(60),
+            'last_90_days' => $endDate->copy()->subDays(90),
+            'all_time' => null,
+            'custom' => $startDate ? Carbon::parse($startDate) : null,
+            default => $endDate->copy()->subDay()->startOfDay(),
+        };
+
+        // Adjust end date for custom date range
+        if ($filter === 'custom' && $endDate) {
+            $endDate = Carbon::parse($endDate)->endOfDay();
+        }
+
+        // Fetch data based on the time range
+        $opportunityQuery = OpportunityState::query();
+        $customerQuery = Customer::query();
+
+        // Only apply date range filtering if the filter is NOT 'all_time'
+        if ($filter !== 'all_time') {
+            $opportunityQuery = $opportunityQuery->whereBetween('created_at', [$startDate, $endDate]);
+            $customerQuery = $customerQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        // Calculate totals
+        $newOpportunities = $opportunityQuery->count();
+        $newCustomers = $customerQuery->count();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'new_opportunities' => $newOpportunities,
+                'new_customers' => $newCustomers,
+            ]);
+        }
+
+        return view('dashboards.charts.chart-opportunities');
+    }
+
+
+    private function calculateYoY()
+    {
+        $currentYear = now()->year;
+        $previousYear = $currentYear - 1;
+
+        // Calculate total for the current year
+        $currentYearPerformance = OpportunityState::whereYear('created_at', $currentYear)
+            ->sum('opportunity_value');
+
+        // Calculate total for the previous year
+        $previousYearPerformance = OpportunityState::whereYear('created_at', $previousYear)
+            ->sum('opportunity_value');
+
+        // Calculate YoY percentage
+        if ($previousYearPerformance > 0) {
+            $yoyPercentage = (($currentYearPerformance - $previousYearPerformance) / $previousYearPerformance) * 100;
+        } else {
+            $yoyPercentage = 0;
+        }
+
+        return [
+            'percentage' => number_format($yoyPercentage, 2, ',', ''),
+            'current_value' => $currentYearPerformance,
+            'previous_value' => $previousYearPerformance,
+        ];
+    }
+
+    private function calculateYTD()
+    {
+        $currentYear = now()->year;
+        $startOfCurrentYear = Carbon::create($currentYear, 1, 1);
+
+        $previousYear = $currentYear - 1;
+        $startOfPreviousYear = Carbon::create($previousYear, 1, 1);
+        $endOfPreviousYear = Carbon::create($previousYear, now()->month, now()->day);
+
+        // Calculate YTD for current year
+        $currentPerformance = OpportunityState::whereBetween('created_at', [$startOfCurrentYear, now()])
+            ->sum('opportunity_value');
+
+        // Calculate YTD for previous year
+        $previousPerformance = OpportunityState::whereBetween('created_at', [$startOfPreviousYear, $endOfPreviousYear])
+            ->sum('opportunity_value');
+
+        if ($previousPerformance > 0) {
+            $ytdPercentage = (($currentPerformance - $previousPerformance) / $previousPerformance) * 100;
+        } else {
+            $ytdPercentage = 0;
+        }
+
+        return [
+            'percentage' => number_format($ytdPercentage, 2, ',', ''),
+            'current_value' => $currentPerformance,
+            'previous_value' => $previousPerformance,
+        ];
+    }
+    private function calculateQoQ()
+    {
+        $currentQuarter = Carbon::now()->quarter;
+        $currentYear = Carbon::now()->year;
+
+        // Set the current quarter start and end
+        $currentQuarterStart = Carbon::create($currentYear)->setQuarter($currentQuarter)->startOfQuarter();
+        $currentQuarterEnd = Carbon::create($currentYear)->setQuarter($currentQuarter)->endOfQuarter();
+
+        // Get the previous quarter start and end
+        $previousQuarterStart = $currentQuarterStart->copy()->subMonths(3);
+        $previousQuarterEnd = $currentQuarterEnd->copy()->subMonths(3);
+
+        // Calculate performance for current and previous quarters
+        $currentQuarterPerformance = OpportunityState::whereBetween('created_at', [$currentQuarterStart, $currentQuarterEnd])
+            ->sum('opportunity_value');
+
+        $previousQuarterPerformance = OpportunityState::whereBetween('created_at', [$previousQuarterStart, $previousQuarterEnd])
+            ->sum('opportunity_value');
+
+        // Calculate QoQ percentage
+        if ($previousQuarterPerformance > 0) {
+            $qoqPercentage = (($currentQuarterPerformance - $previousQuarterPerformance) / $previousQuarterPerformance) * 100;
+        } else {
+            $qoqPercentage = 0;
+        }
+
+        return [
+            'percentage' => number_format($qoqPercentage, 2, ',', ''),
+            'current_value' => $currentQuarterPerformance,
+            'previous_value' => $previousQuarterPerformance
+        ];
+    }
+
+    private function calculateMoM()
+    {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $currentMonthStart = Carbon::create($currentYear, $currentMonth, 1)->startOfMonth();
+        $currentMonthEnd = Carbon::create(
+            $currentYear,
+            $currentMonth,
+            1
+        )->endOfMonth();
+
+        $previousMonthStart = $currentMonthStart->copy()->subMonth();
+        $previousMonthEnd = $currentMonthEnd->copy()->subMonth();
+
+        $currentMonthPerformance = OpportunityState::whereBetween('created_at', [$currentMonthStart, $currentMonthEnd])
+            ->sum('opportunity_value');
+
+        $previousMonthPerformance = OpportunityState::whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])
+            ->sum('opportunity_value');
+
+        if ($previousMonthPerformance > 0) {
+            $momPercentage = (($currentMonthPerformance - $previousMonthPerformance) / $previousMonthPerformance) * 100;
+        } else {
+            $momPercentage = 0;
+        }
+
+        return [
+            'percentage' => number_format($momPercentage, 2, ',', ''),
+            'current_value' => $currentMonthPerformance,
+            'previous_value' => $previousMonthPerformance
+        ];
     }
 
     /*

@@ -108,14 +108,20 @@ function getFileExistsCheck($media)
 
 function getOpportunityStatus($statusId): string
 {
-    return match ($statusId) {
-        1 => 'Inquiry',
-        2 => 'Follow Up',
-        3 => 'Stale',
-        4 => 'Completed',
-        5 => 'Failed',
-        default => '-',
-    };
+    switch ($statusId) {
+        case 1:
+            return 'Inquiry';
+        case 2:
+            return 'Follow Up';
+        case 3:
+            return 'Stale';
+        case 4:
+            return 'Completed';
+        case 5:
+            return 'Failed';
+        default:
+            return '-';
+    }
 }
 
 function getOpportunityHealthBadge(int $healthId): string
