@@ -51,37 +51,18 @@ class HomeController extends Controller
 
     public function earning(Request $request)
     {
-        $filter = $request->input('filter', 'last_24_hours');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        $endDate = now();
-        $startDate = match ($filter) {
-            'last_24_hours' => $endDate->copy()->subDay()->startOfDay(),
-            'last_7_days' => $endDate->copy()->subDays(7),
-            'last_30_days' => $endDate->copy()->subDays(30),
-            'last_60_days' => $endDate->copy()->subDays(60),
-            'last_90_days' => $endDate->copy()->subDays(90),
-            'all_time' => null,
-            'custom' => $startDate ? Carbon::parse($startDate) : null,
-            default => $endDate->copy()->subDay()->startOfDay(),
-        };
-
-        // Handle custom date range for 'custom' filter
-        if ($filter === 'custom' && $endDate) {
-            $endDate = Carbon::parse($endDate)->endOfDay();
-        }
+        $config = $this->filterConfig($request);
 
         // Only apply date range filtering if the filter is NOT 'all_time'
         $baseQuery = OpportunityState::query();
-        if ($filter !== 'all_time') {
-            $baseQuery = $baseQuery->whereBetween('created_at', [$startDate, $endDate]);
+        if ($config[0] !== 'all_time') {
+            $baseQuery = $baseQuery->whereBetween('created_at', [$config[1], $config[2]]);
         }
 
         // Total earnings (no status filter)
         $totalEarnings = $baseQuery->clone()
             ->selectRaw(
-                match ($filter) {
+                match ($config[0]) {
                     'last_24_hours' => "DATE_FORMAT(created_at, '%H:%i') as formatted_date, SUM(opportunity_value) as value",
                     'last_7_days' => "DATE_FORMAT(created_at, '%a') as formatted_date, SUM(opportunity_value) as value",
                     'last_30_days', 'last_60_days', 'last_90_days' => "DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value",
@@ -98,10 +79,7 @@ class HomeController extends Controller
             ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
             ->orderBy('formatted_date')
             ->groupBy('formatted_date')
-            ->pluck(
-                'value',
-                'formatted_date'
-            );
+            ->pluck('value', 'formatted_date');
 
         // Failed earnings
         $failedEarnings = $baseQuery->clone()
@@ -109,10 +87,7 @@ class HomeController extends Controller
             ->selectRaw("DATE_FORMAT(created_at, '%d %b') as formatted_date, SUM(opportunity_value) as value")
             ->orderBy('formatted_date')
             ->groupBy('formatted_date')
-            ->pluck(
-                'value',
-                'formatted_date'
-            );
+            ->pluck('value', 'formatted_date');
 
         if ($request->ajax()) {
             return response()->json([
@@ -121,10 +96,6 @@ class HomeController extends Controller
                 'failedEarnings' => $failedEarnings,
             ]);
         }
-
-        $assets = ['chart', 'animation'];
-
-        return view('dashboards.charts.chart-earning', compact('assets'));
     }
 
     public function getPerformanceMetrics(Request $request)
@@ -149,15 +120,80 @@ class HomeController extends Controller
             default:
                 return response()->json(['error' => 'Invalid filter']);
         }
-
-        return view('dashboards.charts.performance-earning');
     }
 
-    public function getOpportunities(Request $request)
+    public function getOpportunitiesCustomers(Request $request)
     {
-        $filter = $request->query('filter', 'last_24_hours');
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
+        $config = $this->filterConfig($request);
+
+        // Fetch data based on the time range
+        $opportunityQuery = OpportunityState::query();
+        $customerQuery = Customer::query();
+
+        // Only apply date range filtering if the filter is NOT 'all_time'
+        if ($config[0] !== 'all_time') {
+            $opportunityQuery = $opportunityQuery->whereBetween('created_at', [$config[1], $config[2]]);
+            $customerQuery = $customerQuery->whereBetween('created_at', [$config[1], $config[2]]);
+        }
+
+        // Calculate totals
+        $newOpportunities = $opportunityQuery->count();
+        $newCustomers = $customerQuery->count();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'new_opportunities' => $newOpportunities,
+                'new_customers' => $newCustomers,
+            ]);
+        }
+    }
+
+    public function earningOverview(Request $request)
+    {
+        $config = $this->filterConfig(request());
+
+        $baseQuery = OpportunityState::query();
+        if ($config[0] !== 'all_time') {
+            $baseQuery = $baseQuery->whereBetween('created_at', [$config[1], $config[2]]);
+        }
+
+        // Calculate earnings for each status
+        $totalEarnings = $baseQuery->clone()->sum("opportunity_value");
+        $inquiryEarnings = $baseQuery->clone()->where('opportunity_status_id', 1)->sum("opportunity_value");
+        $followUpEarnings = $baseQuery->clone()->where('opportunity_status_id', 2)->sum("opportunity_value");
+        $staledEarnings = $baseQuery->clone()->where('opportunity_status_id', 3)->sum("opportunity_value");
+        $completedEarnings = $baseQuery->clone()->where('opportunity_status_id', 4)->sum("opportunity_value");
+        $failedEarnings = $baseQuery->clone()->where('opportunity_status_id', 5)->sum("opportunity_value");
+
+        // Calculate percentages
+        $inquiryPercentage = $totalEarnings ? ($inquiryEarnings / $totalEarnings) * 100 : 0;
+        $followUpPercentage = $totalEarnings ? ($followUpEarnings / $totalEarnings) * 100 : 0;
+        $staledPercentage = $totalEarnings ? ($staledEarnings / $totalEarnings) * 100 : 0;
+        $completedPercentage = $totalEarnings ? ($completedEarnings / $totalEarnings) * 100 : 0;
+        $failedPercentage = $totalEarnings ? ($failedEarnings / $totalEarnings) * 100 : 0;
+
+        if ($request->ajax()) {
+            return response()->json([
+                'totalEarnings' => $totalEarnings,
+                'inquiryEarnings' => $inquiryEarnings,
+                'followUpEarnings' => $followUpEarnings,
+                'staledEarnings' => $staledEarnings,
+                'completedEarnings' => $completedEarnings,
+                'failedEarnings' => $failedEarnings,
+                'inquiryPercentage' => $inquiryPercentage,
+                'followUpPercentage' => $followUpPercentage,
+                'staledPercentage' => $staledPercentage,
+                'completedPercentage' => $completedPercentage,
+                'failedPercentage' => $failedPercentage,
+            ]);
+        }
+    }
+
+    private function filterConfig($request)
+    {
+        $filter = $request->input('filter', 'last_24_hours');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
         $endDate = now();
         $startDate = match ($filter) {
@@ -171,36 +207,15 @@ class HomeController extends Controller
             default => $endDate->copy()->subDay()->startOfDay(),
         };
 
-        // Adjust end date for custom date range
+        // Handle custom date range for 'custom' filter
         if ($filter === 'custom' && $endDate) {
             $endDate = Carbon::parse($endDate)->endOfDay();
         }
 
-        // Fetch data based on the time range
-        $opportunityQuery = OpportunityState::query();
-        $customerQuery = Customer::query();
-
-        // Only apply date range filtering if the filter is NOT 'all_time'
-        if ($filter !== 'all_time') {
-            $opportunityQuery = $opportunityQuery->whereBetween('created_at', [$startDate, $endDate]);
-            $customerQuery = $customerQuery->whereBetween('created_at', [$startDate, $endDate]);
-        }
-
-        // Calculate totals
-        $newOpportunities = $opportunityQuery->count();
-        $newCustomers = $customerQuery->count();
-
-        if ($request->ajax()) {
-            return response()->json([
-                'new_opportunities' => $newOpportunities,
-                'new_customers' => $newCustomers,
-            ]);
-        }
-
-        return view('dashboards.charts.chart-opportunities');
+        return [$filter, $startDate, $endDate];
     }
 
-    public function getRecentActivity()
+    private function getRecentActivity()
     {
         $percentage = $this->calculateMoM();
 
@@ -208,6 +223,7 @@ class HomeController extends Controller
 
         return [$recentActivity, $percentage];
     }
+
     private function calculateYoY()
     {
         $currentYear = now()->year;
@@ -229,7 +245,7 @@ class HomeController extends Controller
         }
 
         return [
-            'percentage' => number_format($yoyPercentage, 2, ',', ''),
+            'percentage' => number_format($yoyPercentage, 2, ',', '.'),
             'current_value' => $currentYearPerformance,
             'previous_value' => $previousYearPerformance,
         ];
@@ -259,11 +275,12 @@ class HomeController extends Controller
         }
 
         return [
-            'percentage' => number_format($ytdPercentage, 2, ',', ''),
+            'percentage' => number_format($ytdPercentage, 2, ',', '.'),
             'current_value' => $currentPerformance,
             'previous_value' => $previousPerformance,
         ];
     }
+
     private function calculateQoQ()
     {
         $currentQuarter = Carbon::now()->quarter;
@@ -292,7 +309,7 @@ class HomeController extends Controller
         }
 
         return [
-            'percentage' => number_format($qoqPercentage, 2, ',', ''),
+            'percentage' => number_format($qoqPercentage, 2, ',', '.'),
             'current_value' => $currentQuarterPerformance,
             'previous_value' => $previousQuarterPerformance
         ];
@@ -326,7 +343,7 @@ class HomeController extends Controller
         }
 
         return [
-            'percentage' => number_format($momPercentage, 2, ',', ''),
+            'percentage' => number_format($momPercentage, 2, ',', '.'),
             'current_value' => $currentMonthPerformance,
             'previous_value' => $previousMonthPerformance
         ];

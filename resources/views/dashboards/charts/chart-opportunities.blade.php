@@ -1,5 +1,8 @@
 <div class="card" data-aos="fade-up" data-aos-delay="300">
-    <div class="card-header d-flex justify-content-end flex-wrap">
+    <div class="card-header d-flex justify-content-between flex-wrap">
+        <div class="header-title">
+            <h4 class="card-title">Opportunities<br>and Customers</h4>
+        </div>
         <div class="dropdown">
             <a href="#" class="text-gray dropdown-toggle" id="dropdownMenuButtonChartOpportunity" data-bs-toggle="dropdown" aria-expanded="false">
                 Last 24 Hours

@@ -364,42 +364,174 @@
             });
     }
 
-    if (document.querySelectorAll("#myChart").length) {
-        const options = {
-            series: [55, 75],
-            chart: {
-                height: 230,
-                type: "radialBar",
-            },
-            colors: ["#4bc7d2", "#3a57e8"],
-            plotOptions: {
-                radialBar: {
-                    hollow: {
-                        margin: 10,
-                        size: "50%",
+    if (document.querySelectorAll("#earning-overview").length) {
+        let selectedFilter = "last_24_hours"; // Default filter
+
+        // Function to fetch earnings data and update the chart
+        const fetchEarningOverviewData = (
+            filter,
+            startDate = null,
+            endDate = null
+        ) => {
+            let url = `/earning-overview?filter=${filter}`; // Define the URL for the request
+
+            if (filter === "custom" && startDate && endDate) {
+                url += `&start_date=${startDate}&end_date=${endDate}`;
+            }
+
+            // Fetch data from the server
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update the pie chart with new data (percentages)
+                    updateEarningOverviewChart(data);
+                })
+                .catch((error) => console.error("Error fetching data:", error));
+        };
+
+        // Initialize the chart with default values
+        const initializeChart = (earningsData) => {
+            const earnings = earningsData || [0, 0, 0, 0, 0]; // Actual earnings
+            const percentages = [0, 0, 0, 0, 0]; // Placeholder percentages for the initial state
+
+            var options = {
+                series: percentages, // Series represents percentages
+                chart: {
+                    width: 380,
+                    type: "pie",
+                },
+                labels: [
+                    "Inquiry",
+                    "Follow Up",
+                    "Staled",
+                    "Completed",
+                    "Failed",
+                ],
+                colors: ["#feb019", "#008ffb", "#775dd0", "#1aa053", "#c03321"],
+                legend: {
+                    position: "bottom",
+                    markers: {
+                        width: 10,
+                        height: 10,
                     },
-                    track: {
-                        margin: 10,
-                        strokeWidth: "50%",
+                    itemMargin: {
+                        horizontal: 5,
+                        vertical: 5,
                     },
-                    dataLabels: {
-                        show: false,
+                    onItemClick: {
+                        toggleDataSeries: false, // Disable toggle behavior
                     },
                 },
-            },
-            labels: ["Apples", "Oranges"],
-        };
-        if (ApexCharts !== undefined) {
-            const chart = new ApexCharts(
-                document.querySelector("#myChart"),
+                responsive: [
+                    {
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200,
+                            },
+                            legend: {
+                                position: "bottom",
+                            },
+                        },
+                    },
+                ],
+            };
+
+            return new ApexCharts(
+                document.querySelector("#earning-overview"),
                 options
             );
-            chart.render();
-            document.addEventListener("ColorChange", (e) => {
-                const newOpt = { colors: [e.detail.detail2, e.detail.detail1] };
-                chart.updateOptions(newOpt);
+        };
+
+        // Function to update both percentages and earnings
+        const updateEarningOverviewChart = (data) => {
+            const percentages = [
+                data.inquiryPercentage,
+                data.followUpPercentage,
+                data.staledPercentage,
+                data.completedPercentage,
+                data.failedPercentage,
+            ];
+
+            const earnings = [
+                data.inquiryEarnings,
+                data.followUpEarnings,
+                data.staledEarnings,
+                data.completedEarnings,
+                data.failedEarnings,
+            ];
+
+            // Update the chart with percentages, but keep earnings for tooltips
+            chart.updateOptions({
+                series: percentages, // Pass percentages for the pie chart
+                tooltip: {
+                    y: {
+                        formatter: function (value, { seriesIndex, w }) {
+                            // Show actual earnings in the tooltip
+                            return `Rp${formatCurrency(earnings[seriesIndex])}`;
+                        },
+                    },
+                },
             });
-        }
+        };
+
+        // Initialize the chart
+        let chart = initializeChart();
+        chart.render();
+
+        // Fetch data for the default filter and update the chart
+        fetchEarningOverviewData(selectedFilter);
+
+        // Dropdown click handler
+        const dropdownItems = document.querySelectorAll(".earning-overview");
+        dropdownItems.forEach((item) => {
+            item.addEventListener("click", function (e) {
+                e.preventDefault();
+                selectedFilter = this.textContent
+                    .trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, "_");
+
+                if (selectedFilter === "custom") {
+                    document.getElementById(
+                        "custom-date-range-earning-overview"
+                    ).style.display = "block";
+                } else {
+                    document.getElementById(
+                        "custom-date-range-earning-overview"
+                    ).style.display = "none";
+                    fetchEarningOverviewData(selectedFilter); // Fetch data for non-custom filters
+                }
+
+                // Update dropdown button text
+                document.querySelector(
+                    "#dropdownMenuButtonEarningOverview"
+                ).textContent = this.textContent;
+            });
+        });
+
+        // Custom date range apply logic
+        document
+            .getElementById("apply-custom-date-earning-overview")
+            .addEventListener("click", function () {
+                const startDate = document.getElementById(
+                    "start-date-earning-overview"
+                ).value;
+                const endDate = document.getElementById(
+                    "end-date-earning-overview"
+                ).value;
+
+                if (startDate && endDate) {
+                    fetchEarningOverviewData("custom", startDate, endDate); // Fetch data for custom date range
+                } else {
+                    alert("Please select both start and end dates.");
+                }
+            });
     }
 
     if (document.querySelectorAll("#d-activity").length) {
