@@ -182,54 +182,7 @@
       <div class="col-md-12 col-lg-8">
          <div class="row">
             @include('dashboards.charts.chart-earning')
-            <div class="col-md-12 col-lg-6">
-               <div class="card" data-aos="fade-up" data-aos-delay="1000">
-                  <div class="card-header d-flex justify-content-between flex-wrap">
-                     <div class="header-title">
-                        <h4 class="card-title">Earnings</h4>
-                     </div>
-                     <div class="dropdown">
-                        <a href="#" class="text-gray dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                           This Week
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                           <li><a class="dropdown-item" href="#">This Week</a></li>
-                           <li><a class="dropdown-item" href="#">This Month</a></li>
-                           <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                     </div>
-                  </div>
-                  <div class="card-body">
-                     <div class="d-flex align-items-center justify-content-between">
-                        <div id="myChart" class="col-md-8 col-lg-8 myChart"></div>
-                        <div class="d-grid gap col-md-4 col-lg-4">
-                           <div class="d-flex align-items-start">
-                              <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#3a57e8">
-                                 <g id="Solid dot">
-                                    <circle id="Ellipse 67" cx="12" cy="12" r="8" fill="#3a57e8"></circle>
-                                 </g>
-                              </svg>
-                              <div class="ms-3">
-                                 <span class="text-gray">Fashion</span>
-                                 <h6>251K</h6>
-                              </div>
-                           </div>
-                           <div class="d-flex align-items-start">
-                              <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 24 24" fill="#4bc7d2">
-                                 <g id="Solid dot1">
-                                    <circle id="Ellipse 68" cx="12" cy="12" r="8" fill="#4bc7d2"></circle>
-                                 </g>
-                              </svg>
-                              <div class="ms-3">
-                                 <span class="text-gray">Accessories</span>
-                                 <h6>176K</h6>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            @include('dashboards.charts.earning-overview')
             <div class="col-md-12 col-lg-6">
                <div class="card" data-aos="fade-up" data-aos-delay="1200">
                   <div class="card-header d-flex justify-content-between flex-wrap">
@@ -256,7 +209,7 @@
                <div class="card overflow-hidden" data-aos="fade-up" data-aos-delay="400">
                   <div class="card-header d-flex justify-content-between flex-wrap">
                      <div class="header-title">
-                        <h4 class="card-title mb-2">Top 5 Customers by Opportunitiy Value</h4>
+                        <h4 class="card-title mb-2">Top 5 Customers</h4>
                      </div>
                   </div>
                   <div class="card-body p-0">

@@ -1,6 +1,6 @@
 <div class="card" data-aos="fade-up" data-aos-delay="800">
     <div class="card-header d-flex justify-content-between flex-wrap">
-        <div>
+        <div class="header-title">
             <span class="badge bg-success rounded-pill">YoY 24%</span>
         </div>
         <div class="dropdown">
