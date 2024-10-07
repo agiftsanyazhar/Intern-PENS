@@ -32,10 +32,14 @@ class NotificationDataTable extends DataTable
 
                 $title =  $notification->opportunityState->title;
                 $is_read = $notification->is_read;
-                $readBadge = match ($is_read) {
-                    0 => 'danger',
-                    default => '',
-                };
+                switch ($is_read) {
+                    case 0:
+                        $readBadge = 'danger';
+                        break;
+                    default:
+                        $readBadge = '';
+                        break;
+                }
 
                 $span = '<span class="badge bg-' . $readBadge . ' ms-2">Unread</span>';
 
