@@ -34,12 +34,6 @@
 @endif
 
 @if(in_array('calender',$assets ?? []))
-    <!-- Fullcalender Javascript -->
-    {{-- {{-- <script src="{{asset('vendor/fullcalendar/core/main.js')}}"></script>
-    <script src="{{asset('vendor/fullcalendar/daygrid/main.js')}}"></script>
-    <script src="{{asset('vendor/fullcalendar/timegrid/main.js')}}"></script>
-    <script src="{{asset('vendor/fullcalendar/list/main.js')}}"></script>
-    <script src="{{asset('vendor/fullcalendar/interaction/main.js')}}"></script> --}}
     <script src="{{asset('vendor/moment.min.js')}}"></script>
     <script src="{{asset('js/plugins/calender.js')}}"></script>
 @endif
