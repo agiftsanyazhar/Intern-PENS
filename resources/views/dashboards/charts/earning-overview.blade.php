@@ -1,4 +1,4 @@
-<div class="col-md-12 col-lg-6">
+<div class="col-md-12 col-lg-12">
     <div class="card" data-aos="fade-up" data-aos-delay="1000">
         <div class="card-header d-flex justify-content-between flex-wrap">
             <div class="header-title">
