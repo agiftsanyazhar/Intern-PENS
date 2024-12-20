@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-center">
                 <div id="earning-overview" class="earning-overview"></div>
             </div>
         </div>

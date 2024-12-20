@@ -3,7 +3,6 @@
 use App\Helpers\AuthHelper;
 use App\Models\Health;
 use App\Models\Notification;
-use Spatie\Permission\Models\Role;
 
 function removeSession($session)
 {
